@@ -1,0 +1,102 @@
+package com.mini_project_event_management.event_management.event.service.impl;
+
+import com.mini_project_event_management.event_management.event.dto.EventDto;
+import com.mini_project_event_management.event_management.event.entity.Event;
+import com.mini_project_event_management.event_management.event.repository.EventRepository;
+import com.mini_project_event_management.event_management.event.service.EventService;
+import com.mini_project_event_management.event_management.eventType.entity.EventType;
+import com.mini_project_event_management.event_management.eventType.service.EventTypeService;
+import com.mini_project_event_management.event_management.exceptions.DataNotFoundException;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+
+
+import java.time.Instant;
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class EventServiceImpl implements EventService {
+    private final EventRepository eventRepository;
+    private final EventTypeService eventTypeService;
+
+    public EventServiceImpl(EventRepository eventRepository, EventTypeService eventTypeService){
+        this.eventRepository = eventRepository;
+        this.eventTypeService = eventTypeService;
+    }
+
+    @Override
+    public List<Event> getAllEvents(){
+        return eventRepository.findAll();
+    }
+
+    @Override
+    @Cacheable(value = "getEventById", key = "#eventId")
+    public Event getEventById(Long eventId){
+        Optional<Event> event = eventRepository.findById(eventId);
+        if (event.isEmpty()) {
+            throw new DataNotFoundException("Event not found");
+        }
+        return event.orElse(null);
+    }
+
+
+    @Override
+    public Page<EventDto> getAllEventsPaginated(Pageable pageable) {
+        return eventRepository.findAll(pageable)
+                .map(this::convertToEventResponseDto);
+    }
+
+    @Override
+    public EventDto creteEvent(EventDto eventDto){
+        Event event = eventDtoToEvent(eventDto);
+        eventRepository.save(event);
+        return eventDto;
+    }
+
+    private Event eventDtoToEvent(EventDto eventDto){
+        Instant now = Instant.now();
+        EventType eventType = eventTypeService.getEventTypeById(Math.toIntExact(eventDto.getEventTypeId()));
+
+        Event event = new Event();
+        event.setName(eventDto.getName());
+        event.setCity(eventDto.getCity());
+        event.setAddress(eventDto.getAddress());
+        event.setDescription(eventDto.getDescription());
+        event.setCapacity(eventDto.getCapacity());
+        event.setImageUrl(eventDto.getImageUrl());
+        event.setWebsiteUrl(eventDto.getWebsiteUrl());
+        event.setDateStart(eventDto.getDateStart());
+        event.setDateEnd(eventDto.getDateEnd());
+        event.setHourStart(eventDto.getHourStart());
+        event.setHourEnd(eventDto.getHourEnd());
+        event.setEventType(eventType);
+        event.setCreatedAt(now);
+        event.setUpdatedAt(now);
+
+        return event;
+    }
+
+    private EventDto convertToEventResponseDto(Event event) {
+        EventDto eventResponseDto= new EventDto();
+
+        eventResponseDto.setName(event.getName());
+        eventResponseDto.setAddress(event.getAddress());
+        eventResponseDto.setCity(event.getCity());
+        eventResponseDto.setCapacity(event.getCapacity());
+        eventResponseDto.setDescription(event.getDescription());
+        eventResponseDto.setDateStart(event.getDateStart());
+        eventResponseDto.setDateEnd(event.getDateEnd());
+        eventResponseDto.setHourStart(event.getHourStart());
+        eventResponseDto.setHourEnd(event.getHourEnd());
+        eventResponseDto.setImageUrl(event.getImageUrl());
+        eventResponseDto.setWebsiteUrl(event.getWebsiteUrl());
+        eventResponseDto.setEventTypeId(event.getEventType().getId());
+
+        return eventResponseDto;
+    }
+}
