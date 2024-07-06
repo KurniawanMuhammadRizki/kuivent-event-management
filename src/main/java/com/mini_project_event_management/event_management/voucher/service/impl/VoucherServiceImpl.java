@@ -23,12 +23,12 @@ public class VoucherServiceImpl implements VoucherService {
          Organizer organizer = organizerService.getOrganizerById(voucherDto.getOrganizerId());
          Voucher voucher = new Voucher();
 
-         Boolean isNameExist = voucherRepository.existByName(voucherDto.getName());
+         Boolean isNameExist = voucherRepository.existsByName(voucherDto.getName());
          if (isNameExist){
              throw new AlreadyExistException("Name already exist");
          }
 
-         Boolean isCodeExist = voucherRepository.existByCode(voucherDto.getCode());
+         Boolean isCodeExist = voucherRepository.existsByCode(voucherDto.getCode());
          if(isCodeExist){
              throw new AlreadyExistException("Code already exist");
          }
