@@ -18,7 +18,6 @@ public class VoucherDto {
     @Min(value = 0, message = "Discount percent must be zero or positive")
     private int discountPercent;
 
-    @NotNull(message = "Organizer cannot be null")
     private Long organizerId;
 
     public VoucherDto toVoucherDto(Voucher voucher){

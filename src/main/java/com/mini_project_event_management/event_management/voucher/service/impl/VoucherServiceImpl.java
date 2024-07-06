@@ -23,7 +23,8 @@ public class VoucherServiceImpl implements VoucherService {
 
      @Override
     public void addVoucher(VoucherDto voucherDto){
-         Organizer organizer = organizerService.getOrganizerById(voucherDto.getOrganizerId());
+         Long organizerId = currentUser.getAuthorizedOrganizerId();
+         Organizer organizer = organizerService.getOrganizerById(organizerId);
          Voucher voucher = new Voucher();
 
          Boolean isNameExist = voucherRepository.existsByName(voucherDto.getName());
