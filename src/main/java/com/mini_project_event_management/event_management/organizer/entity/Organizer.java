@@ -5,12 +5,13 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.io.Serializable;
 import java.time.Instant;
 
 @Data
 @Entity
 @Table(name = "organizer")
-public class Organizer {
+public class Organizer implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "organizer_id_gen")
     @SequenceGenerator(name = "organizer_id_gen", sequenceName = "organizer_id_seq", allocationSize = 1)

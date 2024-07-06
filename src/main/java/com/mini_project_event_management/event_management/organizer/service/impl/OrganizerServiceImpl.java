@@ -4,16 +4,19 @@ import com.github.slugify.Slugify;
 import com.mini_project_event_management.event_management.company.dto.RegisterCompanyRequestDto;
 import com.mini_project_event_management.event_management.company.dto.RegisterCompanyResponseDto;
 import com.mini_project_event_management.event_management.company.entity.Company;
+import com.mini_project_event_management.event_management.exceptions.DataNotFoundException;
 import com.mini_project_event_management.event_management.organizer.dto.RegisterOrganizerRequestDto;
 import com.mini_project_event_management.event_management.organizer.dto.RegisterOrganizerResponseDto;
 import com.mini_project_event_management.event_management.organizer.entity.Organizer;
 import com.mini_project_event_management.event_management.organizer.repository.OrganizerRepository;
 import com.mini_project_event_management.event_management.organizer.service.OrganizerService;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.Optional;
 
 @Service
 public class OrganizerServiceImpl implements OrganizerService {
@@ -48,5 +51,17 @@ public class OrganizerServiceImpl implements OrganizerService {
         registerOrganizerResponseDto.setWebsiteUrl(organizerRegistered.getWebsiteUrl());
         registerOrganizerResponseDto.setPhoneNumber(organizerRegistered.getPhoneNumber());
         return registerOrganizerResponseDto;
+    }
+
+    @Override
+    @Cacheable(value = "getOrganizerById", key = "#id")
+    public Organizer getOrganizerById(Long id){
+        Optional<Organizer> organizer = organizerRepository.findById(id);
+
+        if (organizer.isEmpty()){
+            throw new DataNotFoundException("Organizer not found");
+        }
+
+        return organizer.orElse(null);
     }
 }
