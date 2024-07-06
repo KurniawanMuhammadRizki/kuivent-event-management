@@ -1,6 +1,7 @@
 package com.mini_project_event_management.event_management.voucher.service.impl;
 
 import com.mini_project_event_management.event_management.exceptions.AlreadyExistException;
+import com.mini_project_event_management.event_management.helpers.CurrentUser;
 import com.mini_project_event_management.event_management.organizer.entity.Organizer;
 import com.mini_project_event_management.event_management.organizer.service.OrganizerService;
 import com.mini_project_event_management.event_management.voucher.dto.VoucherDto;
@@ -11,11 +12,13 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class VoucherServiceImpl implements VoucherService {
-    private VoucherRepository voucherRepository;
-    private OrganizerService organizerService;
-     public VoucherServiceImpl(VoucherRepository voucherRepository, OrganizerService organizerService){
+    private final VoucherRepository voucherRepository;
+    private final OrganizerService organizerService;
+    private final CurrentUser currentUser;
+     public VoucherServiceImpl(VoucherRepository voucherRepository, OrganizerService organizerService, CurrentUser currentUser){
          this.voucherRepository = voucherRepository;
          this.organizerService = organizerService;
+         this.currentUser = currentUser;
      }
 
      @Override
