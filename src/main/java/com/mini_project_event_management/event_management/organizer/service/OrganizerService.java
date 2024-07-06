@@ -7,4 +7,5 @@ import com.mini_project_event_management.event_management.organizer.entity.Organ
 public interface OrganizerService {
     RegisterOrganizerResponseDto register(RegisterOrganizerRequestDto registerOrganizerRequestDto);
     Organizer getOrganizerById(Long id);
+    Organizer getOrganizerByEmail(String email);
 }

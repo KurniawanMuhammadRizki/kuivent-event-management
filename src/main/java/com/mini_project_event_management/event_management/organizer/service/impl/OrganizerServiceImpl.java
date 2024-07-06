@@ -64,4 +64,14 @@ public class OrganizerServiceImpl implements OrganizerService {
 
         return organizer.orElse(null);
     }
+
+    @Override
+    @Cacheable(value = "getOrganizerByEmail", key = "#email")
+    public Organizer getOrganizerByEmail(String email){
+        Optional<Organizer> organizer = organizerRepository.findByEmail(email);
+        if (organizer.isEmpty()){
+            throw new DataNotFoundException("Organizer not found");
+        }
+        return organizer.orElse(null);
+    }
 }
