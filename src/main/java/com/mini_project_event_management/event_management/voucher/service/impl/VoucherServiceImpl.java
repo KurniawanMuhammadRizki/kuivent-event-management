@@ -34,7 +34,7 @@ public class VoucherServiceImpl implements VoucherService {
          }
 
          voucher.setCode(voucherDto.getCode());
-         voucher.setName(voucherDto.getName();
+         voucher.setName(voucherDto.getName());
          voucher.setOrganizer(organizer);
          voucher.setDiscountPercent(voucherDto.getDiscountPercent());
 
