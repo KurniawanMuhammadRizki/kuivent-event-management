@@ -46,7 +46,7 @@ public class InvoiceDto {
      @Min(value = 0, message = "Discount percent must be zero or positive")
      private Integer discountPercent;
 
-     @NotBlank(message = "Coupon used cannot be empty")
+    @NotNull(message = "Coupon used cannot be null")
      private Boolean couponUsed;
 
      @Min(value = 0, message = "Point amount must be zero or positive")
