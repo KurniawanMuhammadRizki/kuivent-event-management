@@ -56,6 +56,7 @@ public class InvoiceServiceImpl implements InvoiceService {
           }
 
           invoice.setTotalPrice((float) finalPrice);
+          invoice.setInvoiceCode("dummy");
           invoiceRepository.save(invoice);
      }
 }
