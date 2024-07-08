@@ -18,6 +18,7 @@ import com.mini_project_event_management.event_management.voucher.service.Vouche
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.SecureRandom;
 import java.time.ZoneId;
 
 @Service
@@ -69,7 +70,7 @@ public class InvoiceServiceImpl implements InvoiceService {
                invoice.setVoucher(voucher);
                invoice.setVoucherName(voucher.getName());
                invoice.setDiscountPercent(voucher.getDiscountPercent());
-               finalPrice -= invoiceDto.getPrice() * voucher.getDiscountPercent() / 100;
+               finalPrice -= (finalPrice * voucher.getDiscountPercent() / 100);
           }
 
           if (invoiceDto.getPointAmount() != null) {
@@ -81,11 +82,18 @@ public class InvoiceServiceImpl implements InvoiceService {
                Coupon coupon = couponService.getCouponById(invoiceDto.getCouponId());
                invoice.setCoupon(coupon);
                invoice.setCouponUsed(true);
-               finalPrice -= invoiceDto.getPrice() * 0.1;
+               finalPrice -= (finalPrice * 0.1);
           }
 
           invoice.setTotalPrice((float) finalPrice);
-          invoice.setInvoiceCode("dummy");
+          invoice.setInvoiceCode(generateInvoiceCode(event.getName(), company.getEmail()));
           invoiceRepository.save(invoice);
+     }
+
+     private String generateInvoiceCode(String eventName, String companyName) {
+          SecureRandom random = new SecureRandom();
+          String letter = companyName.length() < 3 ? companyName : companyName.substring(0, 3);
+          int number = 100 + random.nextInt(900);
+          return "INVOICE/"+ eventName.toUpperCase() + "/" + letter.toUpperCase() + number;
      }
 }
