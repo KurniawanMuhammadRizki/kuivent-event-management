@@ -59,23 +59,23 @@ public class InvoiceDto {
      private Integer pointAmount;
      private Float totalPrice;
 
-     public Invoice toInvoice() {
-          Invoice invoice = new Invoice();
-          //invoice.setEmail(email);
-//          invoice.setHourEnd(hourEnd);
-//          invoice.setHourStart(hourStart);
-//          invoice.setDateStart(dateStart);
-//          invoice.setDateEnd(dateEnd);
-         // invoice.setCategoryName(categoryName);
-        //  invoice.setPrice(price);
-         // invoice.setEventName(eventName);
-        //  invoice.setCity(city);
-        //  invoice.setEventType(eventType);
-         // invoice.setVoucherName(voucherName);
-        //  invoice.setDiscountPercent(discountPercent);
-         // invoice.setCouponUsed(couponUsed);
-          invoice.setPointAmount(pointAmount);
-          return invoice;
-     }
+//     public Invoice toInvoice() {
+//          Invoice invoice = new Invoice();
+//          //invoice.setEmail(email);
+////          invoice.setHourEnd(hourEnd);
+////          invoice.setHourStart(hourStart);
+////          invoice.setDateStart(dateStart);
+////          invoice.setDateEnd(dateEnd);
+//         // invoice.setCategoryName(categoryName);
+//        //  invoice.setPrice(price);
+//         // invoice.setEventName(eventName);
+//        //  invoice.setCity(city);
+//        //  invoice.setEventType(eventType);
+//         // invoice.setVoucherName(voucherName);
+//        //  invoice.setDiscountPercent(discountPercent);
+//         // invoice.setCouponUsed(couponUsed);
+//          //invoice.setPointAmount(pointAmount);
+//          return invoice;
+//     }
 
 }

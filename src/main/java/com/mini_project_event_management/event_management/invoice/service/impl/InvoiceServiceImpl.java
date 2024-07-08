@@ -41,32 +41,28 @@ public class InvoiceServiceImpl implements InvoiceService {
      @Override
      @Transactional
      public void generateInvoice(InvoiceDto invoiceDto) {
-          double finalPrice = invoiceDto.getPrice();
+
           Event event = eventService.getEventById(invoiceDto.getEventId());
           Company company = companyService.getCompanyById(invoiceDto.getCompanyId());
-          CategoryDto category = categoryService.getCategoryById(invoiceDto.getCategoryId());
-          Invoice invoice = invoiceDto.toInvoice();
-          invoice.setCategory(category.toEntity());
+          CategoryDto categoryDto = categoryService.getCategoryById(invoiceDto.getCategoryId());
+          Invoice invoice = new Invoice();
+          Category category = categoryDto.toEntity();
+          double finalPrice = categoryDto.getPrice();
+
+          category.setEvent(event);
+          invoice.setCategory(category);
           invoice.setCategoryName(category.getName());
           invoice.setPrice((float) category.getPrice());
           invoice.setEvent(event);
+          invoice.setEventName(event.getName());
           invoice.setHourStart(event.getHourStart().toInstant().atZone(ZoneId.systemDefault()).toLocalTime());
           invoice.setHourEnd(event.getHourEnd().toInstant().atZone(ZoneId.systemDefault()).toLocalTime());
           invoice.setDateStart(event.getDateStart().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
           invoice.setDateEnd(event.getDateEnd().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-          invoice.setEventType(event.getName());
           invoice.setCity(event.getCity());
           invoice.setEventType(event.getEventType().getName());
           invoice.setCompany(company);
           invoice.setEmail(company.getEmail());
-
-
-          if (invoiceDto.getCouponId() != null) {
-               Coupon coupon = couponService.getCouponById(invoiceDto.getCouponId());
-               invoice.setCoupon(coupon);
-               invoice.setCouponUsed(true);
-               finalPrice -= invoiceDto.getPrice() * 0.1;
-          }
 
           if (invoiceDto.getVoucherId() != null) {
                Voucher voucher = voucherService.getVoucherById(invoiceDto.getVoucherId());
@@ -77,7 +73,15 @@ public class InvoiceServiceImpl implements InvoiceService {
           }
 
           if (invoiceDto.getPointAmount() != null) {
+               invoice.setPointAmount(invoiceDto.getPointAmount());
                finalPrice -= invoiceDto.getPointAmount();
+          }
+
+          if (invoiceDto.getCouponId() != null) {
+               Coupon coupon = couponService.getCouponById(invoiceDto.getCouponId());
+               invoice.setCoupon(coupon);
+               invoice.setCouponUsed(true);
+               finalPrice -= invoiceDto.getPrice() * 0.1;
           }
 
           invoice.setTotalPrice((float) finalPrice);
