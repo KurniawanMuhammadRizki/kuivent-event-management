@@ -6,6 +6,7 @@ import com.mini_project_event_management.event_management.coupon.dto.AddCouponDt
 import com.mini_project_event_management.event_management.coupon.entity.Coupon;
 import com.mini_project_event_management.event_management.coupon.repository.CouponRepository;
 import com.mini_project_event_management.event_management.coupon.service.CouponService;
+import com.mini_project_event_management.event_management.exceptions.DataNotFoundException;
 import com.mini_project_event_management.event_management.referralCode.entity.ReferralCode;
 import com.mini_project_event_management.event_management.referralCode.service.ReferralCodeService;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
+import java.util.Optional;
 
 @Service
 public class CouponServiceImpl implements CouponService {
@@ -53,7 +55,12 @@ public class CouponServiceImpl implements CouponService {
 
     }
 
-
-
-
+    @Override
+    public Coupon getCouponById(Long id){
+        Optional<Coupon> coupon = couponRepository.findById(id);
+        if(coupon.isEmpty() || coupon == null){
+            throw new DataNotFoundException("Coupon not found");
+        }
+        return coupon.orElse(null);
+    }
 }
