@@ -39,4 +39,14 @@ public class CategoryDto implements Serializable {
      categoryDto.setDescriptionDetail(category.getDescriptionDetail());
     return categoryDto;
     }
+
+    public Category toEntity(){
+     Category category = new Category();
+     category.setPrice(price);
+     category.setDescription(description);
+     category.setDescriptionDetail(descriptionDetail);
+     category.setName(name);
+     category.setQuota(quota);
+     return category;
+    }
 }
