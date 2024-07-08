@@ -42,6 +42,7 @@ public class CategoryDto implements Serializable {
 
     public Category toEntity(){
      Category category = new Category();
+     category.setId(id);
      category.setPrice(price);
      category.setDescription(description);
      category.setDescriptionDetail(descriptionDetail);
