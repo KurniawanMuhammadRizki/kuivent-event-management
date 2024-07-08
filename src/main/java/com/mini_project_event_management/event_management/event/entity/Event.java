@@ -91,11 +91,6 @@ public class Event implements Serializable {
      @Column(name = "capacity", nullable = false)
      private int capacity;
 
-     @NotNull(message = "Event type cannot be null")
-     @OneToOne(fetch = FetchType.LAZY, optional = false)
-     @JoinColumn(name = "event_type_id", nullable = false)
-     private EventType eventType;
-
      @ManyToMany(fetch = FetchType.LAZY)
      @JoinTable(name = "event_topic", joinColumns = @JoinColumn(name = "event_id"), inverseJoinColumns = @JoinColumn(name = "topic_id"))
      private List<Topic> topics;
@@ -112,6 +107,10 @@ public class Event implements Serializable {
 
      @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
      private List<Rating> ratings;
+
+     @ManyToOne(fetch = FetchType.LAZY, optional = false)
+     @JoinColumn(name = "event_type_id")
+     private EventType eventType;
 
      @PrePersist
      void onSave() {
@@ -160,6 +159,8 @@ public class Event implements Serializable {
 
           List<RatingDto> ratings = this.ratings.stream().map(Rating::toRatingDto).toList();
           eventDto.setRatings(ratings);
+
+          eventDto.setEventType(eventType);
 
           return eventDto;
      }

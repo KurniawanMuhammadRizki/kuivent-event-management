@@ -23,41 +23,41 @@ public class InvoiceDto {
 
      private Long voucherId;
      private Long couponId;
-     private LocalDate dateStart;
-     private LocalDate dateEnd;
-     private LocalTime hourStart;
-     private LocalTime hourEnd;
-
-     @NotBlank(message = "Category name cannot be empty")
-     private String categoryName;
-
-     @NotNull(message = "Price cannot be null")
-     @Min(value = 0, message = "Price must be zero or positive")
-     private Float price;
-
-     @NotBlank(message = "Event name cannot be empty")
-     private String eventName;
-
-     @NotBlank(message = "City cannot be empty")
-     private String city;
-
-     @NotBlank(message = "Event type cannot be empty")
-     private String eventType;
-
-     @NotBlank(message = "Email cannot be empty")
-     private String email;
-
-     private String voucherName;
-
-     @Min(value = 0, message = "Discount percent must be zero or positive")
-     private Integer discountPercent;
-
-     @NotNull(message = "Coupon used cannot be null")
-     private Boolean couponUsed;
+//     private LocalDate dateStart;
+//     private LocalDate dateEnd;
+//     private LocalTime hourStart;
+//     private LocalTime hourEnd;
+//
+//     @NotBlank(message = "Category name cannot be empty")
+//     private String categoryName;
+//
+//     @NotNull(message = "Price cannot be null")
+//     @Min(value = 0, message = "Price must be zero or positive")
+//     private Float price;
+//
+//     @NotBlank(message = "Event name cannot be empty")
+//     private String eventName;
+//
+//     @NotBlank(message = "City cannot be empty")
+//     private String city;
+//
+//     @NotBlank(message = "Event type cannot be empty")
+//     private String eventType;
+//
+//     @NotBlank(message = "Email cannot be empty")
+//     private String email;
+//
+//     private String voucherName;
+//
+//     @Min(value = 0, message = "Discount percent must be zero or positive")
+//     private Integer discountPercent;
+//
+//     @NotNull(message = "Coupon used cannot be null")
+//     private Boolean couponUsed;
 
      @Min(value = 0, message = "Point amount must be zero or positive")
      private Integer pointAmount;
-     private Float totalPrice;
+     //private Float totalPrice;
 
 //     public Invoice toInvoice() {
 //          Invoice invoice = new Invoice();
