@@ -1,6 +1,7 @@
 package com.mini_project_event_management.event_management.voucher.service.impl;
 
 import com.mini_project_event_management.event_management.exceptions.AlreadyExistException;
+import com.mini_project_event_management.event_management.exceptions.DataNotFoundException;
 import com.mini_project_event_management.event_management.helpers.CurrentUser;
 import com.mini_project_event_management.event_management.organizer.entity.Organizer;
 import com.mini_project_event_management.event_management.organizer.service.OrganizerService;
@@ -8,7 +9,10 @@ import com.mini_project_event_management.event_management.voucher.dto.VoucherDto
 import com.mini_project_event_management.event_management.voucher.entity.Voucher;
 import com.mini_project_event_management.event_management.voucher.repository.VoucherRepository;
 import com.mini_project_event_management.event_management.voucher.service.VoucherService;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class VoucherServiceImpl implements VoucherService {
@@ -43,6 +47,16 @@ public class VoucherServiceImpl implements VoucherService {
          voucher.setDiscountPercent(voucherDto.getDiscountPercent());
 
          voucherRepository.save(voucher);
+     }
+
+     @Override
+     @Cacheable(value = "getVoucherById", key = "#id")
+     public Voucher getVoucherById(Long id){
+          Optional<Voucher> voucher = voucherRepository.findById(id);
+          if(voucher.isEmpty() || voucher == null){
+               throw new DataNotFoundException("Voucher not found");
+          }
+          return voucher.orElse(null);
      }
 
 }

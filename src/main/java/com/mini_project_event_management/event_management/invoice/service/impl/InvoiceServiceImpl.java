@@ -9,6 +9,7 @@ import com.mini_project_event_management.event_management.event.service.EventSer
 import com.mini_project_event_management.event_management.invoice.dto.InvoiceDto;
 import com.mini_project_event_management.event_management.invoice.repository.InvoiceRepository;
 import com.mini_project_event_management.event_management.invoice.service.InvoiceService;
+import com.mini_project_event_management.event_management.voucher.entity.Voucher;
 import com.mini_project_event_management.event_management.voucher.service.VoucherService;
 import org.springframework.stereotype.Service;
 
