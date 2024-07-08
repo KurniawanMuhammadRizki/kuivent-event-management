@@ -66,8 +66,8 @@ public class InvoiceDto {
 //          invoice.setHourStart(hourStart);
 //          invoice.setDateStart(dateStart);
 //          invoice.setDateEnd(dateEnd);
-          invoice.setCategoryName(categoryName);
-          invoice.setPrice(price);
+         // invoice.setCategoryName(categoryName);
+        //  invoice.setPrice(price);
          // invoice.setEventName(eventName);
         //  invoice.setCity(city);
         //  invoice.setEventType(eventType);

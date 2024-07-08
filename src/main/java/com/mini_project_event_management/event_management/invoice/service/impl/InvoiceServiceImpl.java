@@ -1,6 +1,8 @@
 package com.mini_project_event_management.event_management.invoice.service.impl;
 
+import com.mini_project_event_management.event_management.category.dto.CategoryDto;
 import com.mini_project_event_management.event_management.category.entity.Category;
+import com.mini_project_event_management.event_management.category.service.CategoryService;
 import com.mini_project_event_management.event_management.company.entity.Company;
 import com.mini_project_event_management.event_management.company.service.CompanyService;
 import com.mini_project_event_management.event_management.coupon.entity.Coupon;
@@ -25,13 +27,15 @@ public class InvoiceServiceImpl implements InvoiceService {
      private final CompanyService companyService;
      private final VoucherService voucherService;
      private final CouponService couponService;
+     private final CategoryService categoryService;
 
-     public InvoiceServiceImpl(InvoiceRepository invoiceRepository, EventService eventService, CouponService couponService, VoucherService voucherService, CompanyService companyService) {
+     public InvoiceServiceImpl(InvoiceRepository invoiceRepository, EventService eventService, CouponService couponService, VoucherService voucherService, CompanyService companyService, CategoryService categoryService) {
           this.invoiceRepository = invoiceRepository;
           this.eventService = eventService;
           this.couponService = couponService;
           this.voucherService = voucherService;
           this.companyService = companyService;
+          this.categoryService = categoryService;
      }
 
      @Override
@@ -40,9 +44,11 @@ public class InvoiceServiceImpl implements InvoiceService {
           double finalPrice = invoiceDto.getPrice();
           Event event = eventService.getEventById(invoiceDto.getEventId());
           Company company = companyService.getCompanyById(invoiceDto.getCompanyId());
+          CategoryDto category = categoryService.getCategoryById(invoiceDto.getCategoryId());
           Invoice invoice = invoiceDto.toInvoice();
-
-
+          invoice.setCategory(category.toEntity());
+          invoice.setCategoryName(category.getName());
+          invoice.setPrice((float) category.getPrice());
           invoice.setEvent(event);
           invoice.setHourStart(event.getHourStart().toInstant().atZone(ZoneId.systemDefault()).toLocalTime());
           invoice.setHourEnd(event.getHourEnd().toInstant().atZone(ZoneId.systemDefault()).toLocalTime());
@@ -53,6 +59,7 @@ public class InvoiceServiceImpl implements InvoiceService {
           invoice.setEventType(event.getEventType().getName());
           invoice.setCompany(company);
           invoice.setEmail(company.getEmail());
+
 
           if (invoiceDto.getCouponId() != null) {
                Coupon coupon = couponService.getCouponById(invoiceDto.getCouponId());
