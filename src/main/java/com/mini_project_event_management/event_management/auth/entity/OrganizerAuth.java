@@ -3,6 +3,7 @@ package com.mini_project_event_management.event_management.auth.entity;
 import com.mini_project_event_management.event_management.organizer.entity.Organizer;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
@@ -21,12 +22,19 @@ public class OrganizerAuth extends Organizer implements UserDetails {
         return organizer.getPassword();
     }
 
+//    @Override
+//    public Collection<? extends GrantedAuthority> getAuthorities(){
+//        ArrayList<GrantedAuthority> authorities = new ArrayList<>();
+//        authorities.add(() -> "ROLE_ORGANIZER" );
+//        return authorities;
+//    }
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities(){
+    public Collection<? extends GrantedAuthority> getAuthorities() {
         ArrayList<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(() -> "ROLE_ORGANIZER");
+        authorities.add(new SimpleGrantedAuthority("ORGANIZER"));
         return authorities;
     }
+
 
     @Override
     public String getUsername(){

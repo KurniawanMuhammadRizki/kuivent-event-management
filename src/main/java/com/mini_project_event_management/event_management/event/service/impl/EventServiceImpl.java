@@ -1,5 +1,7 @@
 package com.mini_project_event_management.event_management.event.service.impl;
 
+import com.mini_project_event_management.event_management.category.dto.CategoryDto;
+import com.mini_project_event_management.event_management.category.service.CategoryService;
 import com.mini_project_event_management.event_management.event.dto.EventDto;
 import com.mini_project_event_management.event_management.event.entity.Event;
 import com.mini_project_event_management.event_management.event.repository.EventRepository;
@@ -9,6 +11,7 @@ import com.mini_project_event_management.event_management.eventType.service.Even
 import com.mini_project_event_management.event_management.exceptions.DataNotFoundException;
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,6 +26,7 @@ import java.util.Optional;
 public class EventServiceImpl implements EventService {
     private final EventRepository eventRepository;
     private final EventTypeService eventTypeService;
+
 
     public EventServiceImpl(EventRepository eventRepository, EventTypeService eventTypeService){
         this.eventRepository = eventRepository;
@@ -45,10 +49,11 @@ public class EventServiceImpl implements EventService {
     }
 
 
+
     @Override
     public Page<EventDto> getAllEventsPaginated(Pageable pageable) {
         return eventRepository.findAll(pageable)
-                .map(this::convertToEventResponseDto);
+                .map(Event::toEventDto);
     }
 
     @Override
@@ -81,22 +86,4 @@ public class EventServiceImpl implements EventService {
         return event;
     }
 
-    private EventDto convertToEventResponseDto(Event event) {
-        EventDto eventResponseDto= new EventDto();
-
-        eventResponseDto.setName(event.getName());
-        eventResponseDto.setAddress(event.getAddress());
-        eventResponseDto.setCity(event.getCity());
-        eventResponseDto.setCapacity(event.getCapacity());
-        eventResponseDto.setDescription(event.getDescription());
-        eventResponseDto.setDateStart(event.getDateStart());
-        eventResponseDto.setDateEnd(event.getDateEnd());
-        eventResponseDto.setHourStart(event.getHourStart());
-        eventResponseDto.setHourEnd(event.getHourEnd());
-        eventResponseDto.setImageUrl(event.getImageUrl());
-        eventResponseDto.setWebsiteUrl(event.getWebsiteUrl());
-        eventResponseDto.setEventTypeId(event.getEventType().getId());
-
-        return eventResponseDto;
-    }
 }

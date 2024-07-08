@@ -1,5 +1,6 @@
 package com.mini_project_event_management.event_management.company.service.impl;
 
+import com.mini_project_event_management.event_management.company.dto.CompanyDto;
 import com.mini_project_event_management.event_management.company.dto.RegisterCompanyRequestDto;
 import com.mini_project_event_management.event_management.company.dto.RegisterCompanyResponseDto;
 import com.mini_project_event_management.event_management.company.entity.Company;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -54,6 +56,11 @@ public class CompanyServiceImpl implements CompanyService {
             throw new DataNotFoundException("Company not found");
         }
         return company.orElse(null);
+    }
+
+    public List<CompanyDto> getAllCompany(){
+        List<Company> companies = companyRepository.findAll();
+        return companies.stream().map(Company::toCompanyDto).toList();
     }
 
     @Cacheable(value = "getCompanyById", key = "#id")

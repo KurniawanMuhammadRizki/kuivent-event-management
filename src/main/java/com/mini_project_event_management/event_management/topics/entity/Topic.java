@@ -1,5 +1,7 @@
 package com.mini_project_event_management.event_management.topics.entity;
 
+import com.mini_project_event_management.event_management.topics.dto.TopicDto;
+import jakarta.annotation.PreDestroy;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -37,6 +39,29 @@ public class Topic implements Serializable {
 
     @Column(name = "deleted_at")
     private Instant deletedAt;
+
+    @PrePersist
+    void onSave() {
+        this.createdAt = Instant.now();
+        this.updatedAt = Instant.now();
+    }
+
+    @PreUpdate
+    void onUpdate() {
+        this.updatedAt = Instant.now();
+    }
+
+    @PreDestroy
+    void onDelete() {
+        this.deletedAt = Instant.now();
+    }
+
+    public TopicDto toTopicDto(){
+        TopicDto dto = new TopicDto();
+        dto.setName(this.getName());
+        dto.setImgUrl(this.getImgUrl());
+        return dto;
+    }
 
 
 }

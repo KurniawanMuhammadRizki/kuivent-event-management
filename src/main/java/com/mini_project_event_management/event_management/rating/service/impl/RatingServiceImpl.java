@@ -6,6 +6,8 @@ import com.mini_project_event_management.event_management.rating.dto.RatingReque
 import com.mini_project_event_management.event_management.rating.entity.Rating;
 import com.mini_project_event_management.event_management.rating.repository.RatingRepository;
 import com.mini_project_event_management.event_management.rating.service.RatingService;
+import com.mini_project_event_management.event_management.users.entity.Users;
+import com.mini_project_event_management.event_management.users.service.UsersService;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -16,16 +18,18 @@ public class RatingServiceImpl implements RatingService {
     private final RatingRepository ratingRepository;
     private final EventService eventService;
 
-    public RatingServiceImpl(RatingRepository ratingRepository, EventService eventService){
+
+    public RatingServiceImpl(RatingRepository ratingRepository, EventService eventService, UsersService usersService){
         this.ratingRepository = ratingRepository;
         this.eventService = eventService;
+
     }
 
     Rating toRating(RatingRequestDto ratingRequestDto){
         Rating rating = new Rating();
         Instant now = Instant.now();
         Event event = eventService.getEventById(ratingRequestDto.getEventId());
-        rating.setUserId(ratingRequestDto.getUserId());
+       rating.setUserId(ratingRequestDto.getUserId());
         rating.setEvent(event);
         rating.setRating(ratingRequestDto.getRating());
         rating.setReview(event.getName());

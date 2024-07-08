@@ -2,6 +2,8 @@ package com.mini_project_event_management.event_management.speakers.entity;
 
 import com.mini_project_event_management.event_management.company.entity.Company;
 import com.mini_project_event_management.event_management.event.entity.Event;
+import com.mini_project_event_management.event_management.speakers.dto.SpeakerDto;
+import jakarta.annotation.PreDestroy;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -55,4 +57,32 @@ public class Speakers implements Serializable {
 
     @Column(name = "deleted_at")
     private Instant deletedAt;
+
+    @PrePersist
+    void onSave() {
+        this.createdAt = Instant.now();
+        this.updatedAt = Instant.now();
+    }
+
+    @PreUpdate
+    void onUpdate() {
+        this.updatedAt = Instant.now();
+    }
+
+    @PreDestroy
+    void onDelete() {
+        this.deletedAt = Instant.now();
+    }
+
+    public SpeakerDto toSpeakerDto(){
+        SpeakerDto dto = new SpeakerDto();
+        dto.setAbout(this.about);
+        dto.setName(this.name);
+        dto.setCompanyName(this.companyName);
+        dto.setProfileImgUrl(this.profileImageUrl);
+        dto.setSlug(this.slug);
+        dto.setPosition(this.position);
+        dto.setEventId(this.event.getId());
+        return dto;
+    }
 }

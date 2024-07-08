@@ -20,9 +20,4 @@ public class RatingRequestDto {
 
     @NotBlank(message = "review cannot be empty")
     private String review;
-
-
-
-
-
 }

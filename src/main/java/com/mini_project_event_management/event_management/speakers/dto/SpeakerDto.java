@@ -16,4 +16,5 @@ public class SpeakerDto implements Serializable {
     private String companyName;
     @NotNull(message = "Event id  is required")
     private Long eventId;
+    private String slug;
 }

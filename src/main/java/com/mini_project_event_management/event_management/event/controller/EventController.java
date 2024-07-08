@@ -8,6 +8,7 @@ import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,6 +31,7 @@ public class EventController {
     }
 
     @GetMapping("/paginated")
+    @Transactional
     public ResponseEntity<Response<org.springframework.data.domain.Page<EventDto>>> getAllEventsPaginated(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {

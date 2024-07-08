@@ -20,15 +20,18 @@ import java.util.stream.Collectors;
 public class SpeakerServiceImpl implements SpeakersService {
 
     private final SpeakersRepository speakersRepository;
+    private final EventService eventService;
 
 
     public SpeakerServiceImpl(SpeakersRepository speakersRepository, EventService eventService){
         this.speakersRepository = speakersRepository;
+        this.eventService = eventService;
     }
 
     Instant now = Instant.now();
     @Override
     public SpeakerDto addSpeaker(SpeakerDto speakerDto){
+        Event event = eventService.getEventById(speakerDto.getEventId());
         String slug = SlugifyHelper.slugify(speakerDto.getName());
         Speakers speakers =  new Speakers();
         speakers.setName(speakerDto.getName());
@@ -38,6 +41,7 @@ public class SpeakerServiceImpl implements SpeakersService {
        speakers.setCreatedAt(now);
        speakers.setUpdatedAt(now);
        speakers.setSlug(slug);
+       speakers.setEvent(event);
        speakersRepository.save(speakers);
 
 //       SpeakerDto dto = new SpeakerDto();

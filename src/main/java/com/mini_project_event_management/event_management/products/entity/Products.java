@@ -2,6 +2,8 @@ package com.mini_project_event_management.event_management.products.entity;
 
 import com.mini_project_event_management.event_management.company.entity.Company;
 import com.mini_project_event_management.event_management.event.entity.Event;
+import com.mini_project_event_management.event_management.products.dto.ProductsDto;
+import jakarta.annotation.PreDestroy;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -51,4 +53,28 @@ public class Products implements Serializable {
     @Column(name = "deleted_at")
     private Instant deletedAt;
 
+    @PrePersist
+    void onSave() {
+        this.createdAt = Instant.now();
+        this.updatedAt = Instant.now();
+    }
+
+    @PreUpdate
+    void onUpdate() {
+        this.updatedAt = Instant.now();
+    }
+
+    @PreDestroy
+    void onDelete() {
+        this.deletedAt = Instant.now();
+    }
+
+    public ProductsDto toProductsDto(){
+        ProductsDto dto = new ProductsDto();
+       dto.setSlug(this.slug);
+       dto.setName(this.name);
+       dto.setDescription(this.description);
+       dto.setImageUrl(this.imageUrl);
+       return dto;
+    }
 }

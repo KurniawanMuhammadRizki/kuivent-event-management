@@ -2,6 +2,9 @@ package com.mini_project_event_management.event_management.rating.entity;
 
 import com.mini_project_event_management.event_management.event.entity.Event;
 import com.mini_project_event_management.event_management.eventType.entity.EventType;
+import com.mini_project_event_management.event_management.rating.dto.RatingDto;
+import com.mini_project_event_management.event_management.users.entity.Users;
+import jakarta.annotation.PreDestroy;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -27,7 +30,7 @@ public class Rating {
     private Long userId;
 
     @NotNull(message = "Event id cannot be null")
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id", nullable = false)
     private Event event;
 
@@ -49,4 +52,25 @@ public class Rating {
     @NotBlank(message = "Review cannot be empty")
     @Column(name = "review", nullable = false)
     private String review;
+    @PrePersist
+    void onSave() {
+        this.createdAt = Instant.now();
+        this.updatedAt = Instant.now();
+    }
+
+    @PreUpdate
+    void onUpdate() {
+        this.updatedAt = Instant.now();
+    }
+
+    @PreDestroy
+    void onDelete() {
+        this.deletedAt = Instant.now();
+    }
+    public RatingDto toRatingDto(){
+        RatingDto dto = new RatingDto();
+        dto.setRating(this.rating);
+        dto.setReview(this.review);
+        return dto;
+    }
 }

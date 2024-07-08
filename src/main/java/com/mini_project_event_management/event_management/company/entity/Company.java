@@ -1,5 +1,9 @@
 package com.mini_project_event_management.event_management.company.entity;
 
+import com.mini_project_event_management.event_management.company.dto.CompanyDto;
+import com.mini_project_event_management.event_management.products.dto.ProductsDto;
+import com.mini_project_event_management.event_management.products.entity.Products;
+import com.mini_project_event_management.event_management.rating.entity.Rating;
 import jakarta.annotation.PreDestroy;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -8,6 +12,7 @@ import org.hibernate.annotations.ColumnDefault;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.List;
 
 @Data
 @Entity
@@ -69,6 +74,9 @@ public class Company implements Serializable {
     @Column(name = "deleted_at")
     private Instant deletedAt;
 
+    @OneToMany(mappedBy = "company", fetch = FetchType.EAGER)
+    private List<Products> products;
+
     @PrePersist
     void onSave() {
         this.createdAt = Instant.now();
@@ -83,5 +91,23 @@ public class Company implements Serializable {
     @PreDestroy
     void onDelete() {
         this.deletedAt = Instant.now();
+    }
+
+    public CompanyDto toCompanyDto(){
+        CompanyDto dto = new CompanyDto();
+        dto.setName(this.name);
+        dto.setAbout(this.about);
+        dto.setCity(this.city);
+        dto.setProfileUrl(this.profileUrl);
+        dto.setEmail(this.email);
+        dto.setAbout(this.about);
+        dto.setPhoneNumber(this.phoneNumber);
+        dto.setAddress(this.address);
+        dto.setWebsiteUrl(this.getWebsiteUrl());
+        dto.setSlug(this.slug);
+
+        List<ProductsDto> products = this.products.stream().map(Products::toProductsDto).toList();
+        dto.setProducts(products);
+        return dto;
     }
 }

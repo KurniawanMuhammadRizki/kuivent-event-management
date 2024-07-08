@@ -1,5 +1,6 @@
 package com.mini_project_event_management.event_management.category.entity;
 
+import com.mini_project_event_management.event_management.category.dto.CategoryDto;
 import com.mini_project_event_management.event_management.company.entity.Company;
 import com.mini_project_event_management.event_management.event.entity.Event;
 import jakarta.annotation.PreDestroy;
@@ -58,19 +59,30 @@ public class Category implements Serializable {
     @Column(name = "deleted_at")
     private Instant deletedAt;
 
-//    @PrePersist
-//    void onSave() {
-//        this.createdAt = Instant.now();
-//        this.updatedAt = Instant.now();
-//    }
-//
-//    @PreUpdate
-//    void onUpdate() {
-//        this.updatedAt = Instant.now();
-//    }
-//
-//    @PreDestroy
-//    void onDelete() {
-//        this.deletedAt = Instant.now();
-//    }
+    @PrePersist
+    void onSave() {
+        this.createdAt = Instant.now();
+        this.updatedAt = Instant.now();
+    }
+
+    @PreUpdate
+    void onUpdate() {
+        this.updatedAt = Instant.now();
+    }
+
+    @PreDestroy
+    void onDelete() {
+        this.deletedAt = Instant.now();
+    }
+    public CategoryDto toCategoryDto() {
+        CategoryDto categoryDto = new CategoryDto();
+        categoryDto.setId(this.id);
+        categoryDto.setName(this.name);
+        categoryDto.setEventId(this.event.getId());
+        categoryDto.setDescription(this.description);
+        categoryDto.setDescriptionDetail(this.descriptionDetail);
+        categoryDto.setQuota(this.quota);
+        categoryDto.setPrice(this.price);
+        return categoryDto;
+    }
 }

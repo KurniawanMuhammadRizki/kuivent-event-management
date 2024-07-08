@@ -1,8 +1,11 @@
 package com.mini_project_event_management.event_management.company.dto;
 
 import com.mini_project_event_management.event_management.company.entity.Company;
+import com.mini_project_event_management.event_management.products.dto.ProductsDto;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 public class CompanyDto {
@@ -16,6 +19,7 @@ public class CompanyDto {
     private String profileUrl;
     private String about;
     private String slug;
+    private List<ProductsDto> products;
 
     public CompanyDto toCompanyDto(Company company){
         CompanyDto companyDto = new CompanyDto();

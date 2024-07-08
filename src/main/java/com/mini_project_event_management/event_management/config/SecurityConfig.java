@@ -10,6 +10,7 @@ import com.nimbusds.jose.proc.SecurityContext;
 import lombok.extern.java.Log;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -66,6 +67,7 @@ public class SecurityConfig {
                     auth.requestMatchers("api/v1/users/register").permitAll();
                     auth.requestMatchers("api/v1/organizer/register").permitAll();
                     auth.requestMatchers("api/v1/user/forget-password").permitAll();
+                   // auth.requestMatchers(HttpMethod.POST,"api/v1/voucher").hasRole("ORGANIZER");
                     auth.anyRequest().authenticated();
                 }).sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .oauth2ResourceServer((oauth2) -> oauth2.jwt((jwt) -> jwt.decoder(jwtDecoder()))).userDetailsService(userDetailsService).httpBasic(Customizer.withDefaults()).build();

@@ -41,9 +41,18 @@ public class AuthServiceImpl implements AuthService {
         if(existingKey != null){
             return existingKey;
         }
+        //old version
+        //JwtClaimsSet claims = JwtClaimsSet.builder().issuer("self").issuedAt(now).expiresAt(now.plus(1, ChronoUnit.HOURS    )).subject(authentication.getName()).claim("authorities", scope).build();
 
-        JwtClaimsSet claims = JwtClaimsSet.builder().issuer("self").issuedAt(now).expiresAt(now.plus(1, ChronoUnit.HOURS    )).subject(authentication.getName()).claim("scope", scope).build();
-
+        JwtClaimsSet claims = JwtClaimsSet.builder()
+                .issuer("self")
+                .issuedAt(now)
+                .expiresAt(now.plus(1, ChronoUnit.HOURS))
+                .subject(authentication.getName())
+                .claim("authorities", authentication.getAuthorities().stream()
+                        .map(GrantedAuthority::getAuthority)
+                        .collect(Collectors.toList()))
+                .build();
         var jwt =  jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
         authRedisRepository.saveJwtKey(authentication.getName(), jwt);
         return jwt;
