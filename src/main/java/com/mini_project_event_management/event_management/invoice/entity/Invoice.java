@@ -55,7 +55,7 @@ public class Invoice {
      @Column(name = "category_name", nullable = false)
      private String categoryName;
 
-     @Column(name = "last_name", nullable = false)
+     @Column(name = "price", nullable = false)
      private Float price;
 
      @Column(name = "email", nullable = false)
