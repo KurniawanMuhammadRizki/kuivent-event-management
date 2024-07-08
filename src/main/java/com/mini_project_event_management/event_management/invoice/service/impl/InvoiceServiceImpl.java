@@ -7,6 +7,7 @@ import com.mini_project_event_management.event_management.coupon.service.CouponS
 import com.mini_project_event_management.event_management.event.entity.Event;
 import com.mini_project_event_management.event_management.event.service.EventService;
 import com.mini_project_event_management.event_management.invoice.dto.InvoiceDto;
+import com.mini_project_event_management.event_management.invoice.entity.Invoice;
 import com.mini_project_event_management.event_management.invoice.repository.InvoiceRepository;
 import com.mini_project_event_management.event_management.invoice.service.InvoiceService;
 import com.mini_project_event_management.event_management.voucher.entity.Voucher;
@@ -31,10 +32,26 @@ public class InvoiceServiceImpl implements InvoiceService {
 
      @Override
      public void generateInvoice(InvoiceDto invoiceDto){
+          double finalPrice = invoiceDto.getPrice()
           Event event = eventService.getEventById(invoiceDto.getEventId());
           Company company = companyService.getCompanyById(invoiceDto.getCompanyId());
-          if(invoiceDto.getCouponId() != null){
-               Coupon coupon = couponService.
+          Invoice invoice = invoiceDto.toInvoice();
+          invoice.setEvent(event);
+          invoice.setCompany(company);
+
+          if (invoiceDto.getCouponId() != null) {
+               Coupon coupon = couponService.getCouponById(invoiceDto.getCouponId());
+               invoice.setCoupon(coupon);
+               finalPrice -= invoiceDto.getPrice() * 0.1;
           }
+
+          if (invoiceDto.getVoucherId() != null) {
+               Voucher voucher = voucherService.getVoucherById(invoiceDto.getVoucherId());
+               invoice.setVoucher(voucher);
+               finalPrice -= invoiceDto.getPrice() * voucher.getDiscountPercent() / 100;
+          }
+          invoice.setTotalPrice((float) finalPrice);
+          invoiceRepository.save(invoice);
+
      }
 }
