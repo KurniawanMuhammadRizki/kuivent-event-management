@@ -41,20 +41,24 @@ public class InvoiceDto {
      @NotBlank(message = "Event type cannot be empty")
      private String eventType;
 
+     @NotBlank(message = "Email cannot be empty")
+     private String email;
+
      private String voucherName;
 
      @Min(value = 0, message = "Discount percent must be zero or positive")
      private Integer discountPercent;
 
-    @NotNull(message = "Coupon used cannot be null")
+     @NotNull(message = "Coupon used cannot be null")
      private Boolean couponUsed;
 
      @Min(value = 0, message = "Point amount must be zero or positive")
      private Integer pointAmount;
      private Float totalPrice;
 
-     public Invoice toInvoice(){
+     public Invoice toInvoice() {
           Invoice invoice = new Invoice();
+          invoice.setEmail(email);
           invoice.setHourEnd(hourEnd);
           invoice.setHourStart(hourStart);
           invoice.setDateStart(dateStart);
