@@ -8,11 +8,13 @@ import com.mini_project_event_management.event_management.company.repository.Com
 import com.mini_project_event_management.event_management.organizer.entity.Organizer;
 import com.mini_project_event_management.event_management.organizer.repository.OrganizerRepository;
 import com.mini_project_event_management.event_management.users.repository.UsersRepository;
+import lombok.extern.java.Log;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+@Log
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
     private final CompanyRepository companyRepository;
@@ -46,10 +48,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 //            throw new UsernameNotFoundException("email not found");
 //        }
         if (organizerAuthData != null) {
+            log.info(email + " Logged as ORGANIZER");
             return new OrganizerAuth(organizerAuthData);
         } else if (companyAuthData != null) {
+            log.info(email + " Logged as COMPANY");
             return new CompanyAuth(companyAuthData);
         } else if (usersAuthData != null) {
+            log.info(email + " Logged as USER");
             return new UsersAuth(usersAuthData);
         } else {
             throw new UsernameNotFoundException("email not found");

@@ -28,12 +28,21 @@ public class OrganizerAuth extends Organizer implements UserDetails {
 //        authorities.add(() -> "ROLE_ORGANIZER" );
 //        return authorities;
 //    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         ArrayList<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("ORGANIZER"));
+        authorities.add(new SimpleGrantedAuthority("ROLE_ORGANIZER"));
         return authorities;
     }
+
+//    @Override
+//    public Collection<? extends GrantedAuthority> getAuthorities() {
+//        List<Roles> roles = this.user.getRoles();
+//        return roles.stream()
+//                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName()))
+//                .collect(Collectors.toCollection(ArrayList::new));
+//    }
 
 
     @Override
