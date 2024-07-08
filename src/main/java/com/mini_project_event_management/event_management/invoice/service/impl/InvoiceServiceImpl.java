@@ -22,7 +22,7 @@ public class InvoiceServiceImpl implements InvoiceService {
      private final VoucherService voucherService;
      private final CouponService couponService;
 
-     public InvoiceServiceImpl(InvoiceRepository invoiceRepository, EventService eventService, CouponService couponService, VoucherService voucherService, CompanyService companyService){
+     public InvoiceServiceImpl(InvoiceRepository invoiceRepository, EventService eventService, CouponService couponService, VoucherService voucherService, CompanyService companyService) {
           this.invoiceRepository = invoiceRepository;
           this.eventService = eventService;
           this.couponService = couponService;
@@ -31,8 +31,8 @@ public class InvoiceServiceImpl implements InvoiceService {
      }
 
      @Override
-     public void generateInvoice(InvoiceDto invoiceDto){
-          double finalPrice = invoiceDto.getPrice()
+     public void generateInvoice(InvoiceDto invoiceDto) {
+          double finalPrice = invoiceDto.getPrice();
           Event event = eventService.getEventById(invoiceDto.getEventId());
           Company company = companyService.getCompanyById(invoiceDto.getCompanyId());
           Invoice invoice = invoiceDto.toInvoice();
@@ -50,8 +50,12 @@ public class InvoiceServiceImpl implements InvoiceService {
                invoice.setVoucher(voucher);
                finalPrice -= invoiceDto.getPrice() * voucher.getDiscountPercent() / 100;
           }
+
+          if (invoiceDto.getPointAmount() != null) {
+               finalPrice -= invoiceDto.getPointAmount();
+          }
+
           invoice.setTotalPrice((float) finalPrice);
           invoiceRepository.save(invoice);
-
      }
 }
