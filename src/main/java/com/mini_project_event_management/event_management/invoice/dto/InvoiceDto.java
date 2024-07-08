@@ -18,6 +18,9 @@ public class InvoiceDto {
      @NotNull(message = "Company  cannot be null")
      private Long companyId;
 
+     @NotNull(message = "Category cannot be null")
+     private Long categoryId;
+
      private Long voucherId;
      private Long couponId;
      private LocalDate dateStart;
@@ -58,19 +61,19 @@ public class InvoiceDto {
 
      public Invoice toInvoice() {
           Invoice invoice = new Invoice();
-          invoice.setEmail(email);
-          invoice.setHourEnd(hourEnd);
-          invoice.setHourStart(hourStart);
-          invoice.setDateStart(dateStart);
-          invoice.setDateEnd(dateEnd);
+          //invoice.setEmail(email);
+//          invoice.setHourEnd(hourEnd);
+//          invoice.setHourStart(hourStart);
+//          invoice.setDateStart(dateStart);
+//          invoice.setDateEnd(dateEnd);
           invoice.setCategoryName(categoryName);
           invoice.setPrice(price);
-          invoice.setEventName(eventName);
-          invoice.setCity(city);
-          invoice.setEventType(eventType);
-          invoice.setVoucherName(voucherName);
-          invoice.setDiscountPercent(discountPercent);
-          invoice.setCouponUsed(couponUsed);
+         // invoice.setEventName(eventName);
+        //  invoice.setCity(city);
+        //  invoice.setEventType(eventType);
+         // invoice.setVoucherName(voucherName);
+        //  invoice.setDiscountPercent(discountPercent);
+         // invoice.setCouponUsed(couponUsed);
           invoice.setPointAmount(pointAmount);
           return invoice;
      }
