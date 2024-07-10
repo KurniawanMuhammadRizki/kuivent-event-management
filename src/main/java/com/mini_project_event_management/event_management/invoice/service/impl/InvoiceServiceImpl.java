@@ -70,9 +70,11 @@ public class InvoiceServiceImpl implements InvoiceService {
           invoice.setCompany(company);
           invoice.setEmail(company.getEmail());
 
-          if (invoiceDto.getVoucherId() != null) {
-               //ini harusnya pake pengecekan by Code bukan id
+          if (invoiceDto.getVoucherCode() != null) {
                Voucher voucher = voucherService.getVoucherByCode(invoiceDto.getVoucherCode());
+               if(voucher.getDeletedAt() != null){
+                    throw new DataNotFoundException("Voucher invalid / deleted");
+               }
                invoice.setVoucher(voucher);
                invoice.setVoucherName(voucher.getName());
                invoice.setDiscountPercent(voucher.getDiscountPercent());
