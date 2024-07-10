@@ -72,7 +72,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
           if (invoiceDto.getVoucherId() != null) {
                //ini harusnya pake pengecekan by Code bukan id
-               Voucher voucher = voucherService.getVoucherById(invoiceDto.getVoucherId());
+               Voucher voucher = voucherService.getVoucherByCode(invoiceDto.getVoucherCode());
                invoice.setVoucher(voucher);
                invoice.setVoucherName(voucher.getName());
                invoice.setDiscountPercent(voucher.getDiscountPercent());
