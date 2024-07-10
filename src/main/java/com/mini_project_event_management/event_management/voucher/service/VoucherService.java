@@ -6,4 +6,5 @@ import com.mini_project_event_management.event_management.voucher.entity.Voucher
 public interface VoucherService {
     void addVoucher(VoucherDto voucherDto);
     Voucher getVoucherById(Long id);
+    Voucher getVoucherByCode(String code);
 }

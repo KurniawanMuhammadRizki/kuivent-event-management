@@ -87,7 +87,6 @@ public class InvoiceServiceImpl implements InvoiceService {
           }
 
           if (invoiceDto.getCouponId() != null) {
-               //belom ada set kuponnya user jadi false sama belom ada pengecekan
                Coupon coupon = couponService.getCouponById(invoiceDto.getCouponId());
 
                if(!coupon.isValid()){
@@ -100,7 +99,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
                invoice.setCoupon(coupon);
                invoice.setCouponUsed(true);
-
+               couponService.setCouponUsed(invoiceDto.getCouponId());
                finalPrice -= (finalPrice * 0.1);
           }
 

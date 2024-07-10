@@ -59,4 +59,14 @@ public class VoucherServiceImpl implements VoucherService {
           return voucher.orElse(null);
      }
 
+     @Override
+     @Cacheable(value = "getVoucherByCode", key = "#code")
+     public Voucher getVoucherByCode(String code){
+          Optional<Voucher> voucher = Optional.ofNullable(voucherRepository.findByCode(code));
+          if(voucher.isEmpty() || voucher == null){
+               throw new DataNotFoundException("Voucher not found");
+          }
+          return voucher.orElse(null);
+     }
+
 }
