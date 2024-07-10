@@ -58,6 +58,24 @@ public class CompanyServiceImpl implements CompanyService {
         return company.orElse(null);
     }
 
+
+    @Cacheable(value = "getCompanyBySlug", key = "#slug")
+    @Override
+    public Company getCompanyBySlug(String slug) {
+        Optional<Company> company = companyRepository.findBySlug(slug);
+        if (company.isEmpty()) {
+            throw new DataNotFoundException("Company not found");
+        }
+        return company.orElse(null);
+    }
+
+    @Override
+    public CompanyDto getCompanyDtoBySlug(String slug){
+        Company company = getCompanyBySlug(slug);
+        CompanyDto companyDto =  company.toCompanyDto();
+        return companyDto;
+    }
+
     public List<CompanyDto> getAllCompany(){
         List<Company> companies = companyRepository.findAll();
         return companies.stream().map(Company::toCompanyDto).toList();

@@ -33,5 +33,12 @@ public class CompanyController {
         return Response.successfulResponse("Company fetched successfully", companies);
     }
 
+    @GetMapping("{slug}")
+    public ResponseEntity<Response<CompanyDto>> getCompanyDtoBySlug(@PathVariable String slug){
+        var company = companyService.getCompanyDtoBySlug(slug);
+        return Response.successfulResponse("Company fetched successfully", company);
+    }
+
+
 
 }

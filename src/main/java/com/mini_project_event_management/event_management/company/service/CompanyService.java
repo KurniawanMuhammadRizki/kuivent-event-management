@@ -10,6 +10,8 @@ import java.util.List;
 public interface CompanyService {
     RegisterCompanyResponseDto register(RegisterCompanyRequestDto registerDto);
     Company getCompanyByEmail(String email);
+    Company getCompanyBySlug(String slug);
+    CompanyDto getCompanyDtoBySlug(String slug);
     Company getCompanyById(Long id);
     List<CompanyDto> getAllCompany();
 }

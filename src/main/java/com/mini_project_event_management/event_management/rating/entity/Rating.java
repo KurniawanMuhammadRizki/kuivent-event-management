@@ -26,8 +26,9 @@ public class Rating {
     private Long id;
 
     @NotNull(message = "User id empty")
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private Users users;
 
     @NotNull(message = "Event id cannot be null")
     @ManyToOne(fetch = FetchType.LAZY)
@@ -71,6 +72,9 @@ public class Rating {
         RatingDto dto = new RatingDto();
         dto.setRating(this.rating);
         dto.setReview(this.review);
+        dto.setUserId(this.users.getId());
+        dto.setUserName(this.users.getFirstName());
+        dto.setEventId(this.event.getId());
         return dto;
     }
 }
