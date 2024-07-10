@@ -9,6 +9,8 @@ import com.mini_project_event_management.event_management.coupon.entity.Coupon;
 import com.mini_project_event_management.event_management.coupon.service.CouponService;
 import com.mini_project_event_management.event_management.event.entity.Event;
 import com.mini_project_event_management.event_management.event.service.EventService;
+import com.mini_project_event_management.event_management.exceptions.ApplicationException;
+import com.mini_project_event_management.event_management.exceptions.DataNotFoundException;
 import com.mini_project_event_management.event_management.invoice.dto.InvoiceDto;
 import com.mini_project_event_management.event_management.invoice.entity.Invoice;
 import com.mini_project_event_management.event_management.invoice.repository.InvoiceRepository;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.SecureRandom;
+import java.time.Instant;
 import java.time.ZoneId;
 @Log
 @Service
@@ -86,8 +89,18 @@ public class InvoiceServiceImpl implements InvoiceService {
           if (invoiceDto.getCouponId() != null) {
                //belom ada set kuponnya user jadi false sama belom ada pengecekan
                Coupon coupon = couponService.getCouponById(invoiceDto.getCouponId());
+
+               if(!coupon.isValid()){
+                    throw new DataNotFoundException("You doesn't have valid coupon");
+               }
+
+               if(coupon.getExpiredAt().isAfter(Instant.now())){
+                    throw new DataNotFoundException("You doesn't have valid coupon");
+               }
+
                invoice.setCoupon(coupon);
                invoice.setCouponUsed(true);
+
                finalPrice -= (finalPrice * 0.1);
           }
 
