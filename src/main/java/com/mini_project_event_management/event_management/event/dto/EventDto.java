@@ -6,6 +6,7 @@ import com.mini_project_event_management.event_management.category.entity.Catego
 import com.mini_project_event_management.event_management.company.dto.CompanyDto;
 import com.mini_project_event_management.event_management.company.entity.Company;
 import com.mini_project_event_management.event_management.event.entity.Event;
+import com.mini_project_event_management.event_management.eventType.dto.EventTypeDto;
 import com.mini_project_event_management.event_management.eventType.entity.EventType;
 import com.mini_project_event_management.event_management.rating.dto.RatingDto;
 import com.mini_project_event_management.event_management.speakers.dto.SpeakerDto;
@@ -57,7 +58,7 @@ public class EventDto {
    private List<CompanyDto> companies;
    private List<SpeakerDto> speakers;
    private List<RatingDto> ratings;
-   private EventType eventType;
+   private EventTypeDto eventType;
 
 
 }

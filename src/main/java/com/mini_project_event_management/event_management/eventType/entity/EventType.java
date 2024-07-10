@@ -1,5 +1,6 @@
 package com.mini_project_event_management.event_management.eventType.entity;
 
+import com.mini_project_event_management.event_management.eventType.dto.EventTypeDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
@@ -35,4 +36,11 @@ public class EventType {
 
     @Column(name = "deleted_at")
     private Instant deletedAt;
+
+    public EventTypeDto toEventTypeDto(){
+        EventTypeDto dto = new EventTypeDto();
+        dto.setId(id);
+        dto.setName(name);
+        return dto;
+    }
 }

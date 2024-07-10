@@ -160,7 +160,7 @@ public class Event implements Serializable {
           List<RatingDto> ratings = this.ratings.stream().map(Rating::toRatingDto).toList();
           eventDto.setRatings(ratings);
 
-          eventDto.setEventType(eventType);
+          eventDto.setEventType(eventType.toEventTypeDto());
 
           return eventDto;
      }

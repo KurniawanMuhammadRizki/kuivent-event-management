@@ -15,12 +15,13 @@ import com.mini_project_event_management.event_management.invoice.repository.Inv
 import com.mini_project_event_management.event_management.invoice.service.InvoiceService;
 import com.mini_project_event_management.event_management.voucher.entity.Voucher;
 import com.mini_project_event_management.event_management.voucher.service.VoucherService;
+import lombok.extern.java.Log;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.SecureRandom;
 import java.time.ZoneId;
-
+@Log
 @Service
 public class InvoiceServiceImpl implements InvoiceService {
      private final InvoiceRepository invoiceRepository;
@@ -61,11 +62,13 @@ public class InvoiceServiceImpl implements InvoiceService {
           invoice.setDateStart(event.getDateStart().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
           invoice.setDateEnd(event.getDateEnd().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
           invoice.setCity(event.getCity());
-          invoice.setEventType(event.getEventType().getName());
+          //masih ada error
+          invoice.setEventType("aw");
           invoice.setCompany(company);
           invoice.setEmail(company.getEmail());
 
           if (invoiceDto.getVoucherId() != null) {
+               //ini harusnya pake pengecekan by Code bukan id
                Voucher voucher = voucherService.getVoucherById(invoiceDto.getVoucherId());
                invoice.setVoucher(voucher);
                invoice.setVoucherName(voucher.getName());
@@ -74,11 +77,14 @@ public class InvoiceServiceImpl implements InvoiceService {
           }
 
           if (invoiceDto.getPointAmount() != null) {
+               //cek pointnya expired apa engga
+               //ini belom ada pengurangan ke companynya
                invoice.setPointAmount(invoiceDto.getPointAmount());
                finalPrice -= invoiceDto.getPointAmount();
           }
 
           if (invoiceDto.getCouponId() != null) {
+               //belom ada set kuponnya user jadi false sama belom ada pengecekan
                Coupon coupon = couponService.getCouponById(invoiceDto.getCouponId());
                invoice.setCoupon(coupon);
                invoice.setCouponUsed(true);
@@ -86,6 +92,7 @@ public class InvoiceServiceImpl implements InvoiceService {
           }
 
           invoice.setTotalPrice((float) finalPrice);
+          //masih ada error mau pake slug aja
           invoice.setInvoiceCode(generateInvoiceCode(event.getName(), company.getEmail()));
           invoiceRepository.save(invoice);
      }
