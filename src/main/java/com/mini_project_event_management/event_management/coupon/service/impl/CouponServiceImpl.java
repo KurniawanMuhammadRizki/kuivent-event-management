@@ -65,12 +65,14 @@ public class CouponServiceImpl implements CouponService {
     }
 
     @Override
-    public void setCouponUsed(Long id){
-        Optional<Coupon> coupon = couponRepository.findById(id);
-        if(coupon.isEmpty() || coupon == null){
+    public void setCouponUsed(Long id) {
+        Optional<Coupon> couponOptional = couponRepository.findById(id);
+        if (couponOptional.isEmpty()) {
             throw new DataNotFoundException("Coupon not found");
         }
-        coupon.get().setValid(false);
+
+        Coupon coupon = couponOptional.get();
+        coupon.setValid(false);
         couponRepository.save(coupon);
     }
 }
