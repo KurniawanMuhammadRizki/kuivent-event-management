@@ -136,7 +136,7 @@ public class Event implements Serializable {
           eventDto.setWebsiteUrl(this.websiteUrl);
           eventDto.setImageUrl(this.imageUrl);
           eventDto.setDescription(this.description);
-          eventDto.setDescription(this.descriptionDetail);
+          eventDto.setDescriptionDetail(this.descriptionDetail);
           eventDto.setDateStart(this.dateStart);
           eventDto.setDateEnd(this.dateEnd);
           eventDto.setHourStart(this.hourStart);
