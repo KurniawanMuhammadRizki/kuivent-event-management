@@ -38,10 +38,12 @@ public class SecurityConfig {
     private final RsaKeyConfigProperties rsaKeyConfigProperties;
 
     private final UserDetailsServiceImpl userDetailsService;
+    private final CorsConfigurationSourceImpl corsConfigurationSource;
 
-    public SecurityConfig(RsaKeyConfigProperties rsaKeyConfigProperties, UserDetailsServiceImpl userDetailsService){
+    public SecurityConfig(RsaKeyConfigProperties rsaKeyConfigProperties, UserDetailsServiceImpl userDetailsService, CorsConfigurationSourceImpl corsConfigurationSource){
         this.rsaKeyConfigProperties = rsaKeyConfigProperties;
         this.userDetailsService = userDetailsService;
+        this.corsConfigurationSource = corsConfigurationSource;
     }
 
     @Bean
@@ -59,12 +61,13 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, HandlerMappingIntrospector introspector) throws Exception{
-        return http.csrf(AbstractHttpConfigurer::disable).cors(AbstractHttpConfigurer::disable).authorizeHttpRequests(auth ->{
+        return http.csrf(AbstractHttpConfigurer::disable).cors(cors -> cors.configurationSource(corsConfigurationSource)).authorizeHttpRequests(auth ->{
                     auth.requestMatchers("error/**").permitAll();
                     auth.requestMatchers("api/v1/auth/**").permitAll();
                     auth.requestMatchers("api/v1/user/register").permitAll();
                     auth.requestMatchers("api/v1/company/register").permitAll();
                      auth.requestMatchers(HttpMethod.GET,"api/v1/company/{slug}").permitAll();
+                     auth.requestMatchers(HttpMethod.GET,"api/v1/rating/{eventId}").permitAll();
                     auth.requestMatchers("api/v1/users/register").permitAll();
                     auth.requestMatchers("api/v1/organizer/register").permitAll();
                      auth.requestMatchers("api/v1/event/**").permitAll();

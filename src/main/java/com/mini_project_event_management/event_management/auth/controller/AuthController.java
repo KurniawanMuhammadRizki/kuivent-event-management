@@ -75,16 +75,6 @@ public class AuthController {
         response.setToken(token);
         response.setRole(role);
 
-
-//        SecurityContext ctx = SecurityContextHolder.getContext();
-//        Authentication auth = ctx.getAuthentication();
-//
-//
-//        LoginResponseDto response = new LoginResponseDto();
-//        response.setMessage("User logged in successfully");
-//        response.setToken(token);
-//        response.setRole(role);
-
         Cookie cookie = new Cookie("sid", token);
         HttpHeaders header = new HttpHeaders();
         header.add("Set-Cookie", cookie.getName() + "=" + cookie.getValue() + "; Path=/; HttpOnly");
@@ -92,23 +82,16 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.OK).headers(header).body(response);
     }
 
-//    @PostMapping
-//    public ResponseEntity<?> login(@RequestBody LoginRequestDto userLogin){
-//        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userLogin.getEmail(), userLogin.getPassword()));
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
-//
-//        OrganizerAuth userDetails = (OrganizerAuth) authentication.getPrincipal();
-//        String token = authService.generateToken(authentication);
-//
-//        LoginResponseDto response = new LoginResponseDto();
-//        response.setMessage("User logged in successfully");
-//        response.setToken(token);
-//
-//        Cookie cookie = new Cookie("sid", token);
-//        HttpHeaders header = new HttpHeaders();
-//        header.add("Set-Cookie", cookie.getName() + "=" + cookie.getValue() + "; Path=/; HttpOnly");
-//
-//        return ResponseEntity.status(HttpStatus.OK).headers(header).body(response);
-//    }
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(){
+        String response = "Logout successfully";
+        Cookie cookie = new Cookie("sid", "");
+        cookie.setMaxAge(0);
+        HttpHeaders header = new HttpHeaders();
+        header.add("Set-Cookie", cookie.getName() + "=" + cookie.getValue() + "; Path=/; HttpOnly");
+        return ResponseEntity.status(HttpStatus.OK).headers(header).body(response);
+    }
+
+
 
 }
