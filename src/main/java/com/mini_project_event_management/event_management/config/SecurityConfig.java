@@ -71,6 +71,7 @@ public class SecurityConfig {
                     auth.requestMatchers("api/v1/users/register").permitAll();
                     auth.requestMatchers("api/v1/organizer/register").permitAll();
                      auth.requestMatchers("api/v1/event/**").permitAll();
+                     auth.requestMatchers("api/v1/company/**").permitAll();
                      auth.requestMatchers("api/v1/event-topic/**").permitAll();
                     auth.requestMatchers("api/v1/user/forget-password").permitAll();
                     auth.requestMatchers(HttpMethod.POST,"api/v1/voucher").hasAuthority("SCOPE_ROLE_ORGANIZER");
