@@ -46,6 +46,12 @@ public class EventController {
         return Response.successfulResponse("Event created successfully", createdEvent);
     }
 
+    @GetMapping("{slug}")
+    public ResponseEntity<Response<EventDto>> getEventBySlug(@PathVariable String slug){
+        var event = eventService.getEventDtoBySlug(slug);
+        return Response.successfulResponse("Event fetched successfully", event);
+    }
+
 
 
 }

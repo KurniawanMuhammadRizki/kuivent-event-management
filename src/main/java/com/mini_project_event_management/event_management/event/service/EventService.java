@@ -11,4 +11,6 @@ public interface EventService {
     Page<EventDto> getAllEventsPaginated(org.springframework.data.domain.Pageable pageable);
     EventDto creteEvent(EventDto eventDto);
     Event getEventById(Long eventId);
+    Event getEventBySlug(String slug);
+    EventDto getEventDtoBySlug(String slug);
 }

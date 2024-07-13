@@ -60,6 +60,9 @@ public class Event implements Serializable {
      @Column(name = "description_detail")
      private String descriptionDetail;
 
+     @Column(name = "slug")
+     private String slug;
+
      @NotNull(message = "Date start cannot be empty")
      @Column(name = "date_start")
      private Date dateStart;
@@ -136,6 +139,7 @@ public class Event implements Serializable {
           eventDto.setWebsiteUrl(this.websiteUrl);
           eventDto.setImageUrl(this.imageUrl);
           eventDto.setDescription(this.description);
+          eventDto.setSlug(this.slug);
           eventDto.setDescriptionDetail(this.descriptionDetail);
           eventDto.setDateStart(this.dateStart);
           eventDto.setDateEnd(this.dateEnd);

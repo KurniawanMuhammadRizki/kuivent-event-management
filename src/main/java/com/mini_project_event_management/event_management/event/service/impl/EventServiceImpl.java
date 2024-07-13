@@ -48,6 +48,23 @@ public class EventServiceImpl implements EventService {
         return event.orElse(null);
     }
 
+    @Override
+    @Cacheable(value = "getEventBySlug", key = "#slug")
+    public Event getEventBySlug(String slug){
+        Optional<Event> event = eventRepository.findBySlug(slug);
+        if (event.isEmpty()) {
+            throw new DataNotFoundException("Event not found");
+        }
+        return event.orElse(null);
+    }
+
+    @Override
+    public EventDto getEventDtoBySlug(String slug){
+        Event event = getEventBySlug(slug);
+        EventDto eventDto = event.toEventDto();
+        return eventDto;
+    }
+
 
 
     @Override

@@ -35,6 +35,7 @@ public class EventDto {
     private String description;
 
     private String descriptionDetail;
+    private String slug;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd")
     private Date dateStart;
