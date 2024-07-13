@@ -14,7 +14,7 @@ public class CorsConfigurationSourceImpl implements CorsConfigurationSource {
      public CorsConfiguration getCorsConfiguration(@NonNull HttpServletRequest request) {
           CorsConfiguration corsConfiguration = new CorsConfiguration();
           corsConfiguration.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
-          corsConfiguration.setAllowedOriginPatterns(List.of("http://localhost:3000"));
+          corsConfiguration.setAllowedOriginPatterns(List.of("http://localhost:3000", "https://kukivent.vercel.app"));
           corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PUT", "OPTIONS", "PATCH", "DELETE"));
           corsConfiguration.setAllowCredentials(true);
           corsConfiguration.setExposedHeaders(List.of("Authorization", "Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"));
