@@ -1,8 +1,12 @@
 package com.mini_project_event_management.event_management.category.entity;
 
+import com.mini_project_event_management.event_management.block.dto.BlockDto;
+import com.mini_project_event_management.event_management.block.entity.Block;
 import com.mini_project_event_management.event_management.category.dto.CategoryDto;
 import com.mini_project_event_management.event_management.company.entity.Company;
 import com.mini_project_event_management.event_management.event.entity.Event;
+import com.mini_project_event_management.event_management.products.dto.ProductsDto;
+import com.mini_project_event_management.event_management.products.entity.Products;
 import jakarta.annotation.PreDestroy;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
@@ -13,6 +17,8 @@ import org.hibernate.annotations.ColumnDefault;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @Entity
@@ -59,6 +65,10 @@ public class Category implements Serializable {
     @Column(name = "deleted_at")
     private Instant deletedAt;
 
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
+    private List<Block> blocks;
+
+
     @PrePersist
     void onSave() {
         this.createdAt = Instant.now();
@@ -83,6 +93,8 @@ public class Category implements Serializable {
         categoryDto.setDescriptionDetail(this.descriptionDetail);
         categoryDto.setQuota(this.quota);
         categoryDto.setPrice(this.price);
+        List<BlockDto> block = this.blocks.stream().map(Block::toBlockDto).collect(Collectors.toList());
+        categoryDto.setBlocks(block);
         return categoryDto;
     }
 }

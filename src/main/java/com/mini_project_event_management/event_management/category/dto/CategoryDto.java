@@ -1,5 +1,7 @@
 package com.mini_project_event_management.event_management.category.dto;
 
+import com.mini_project_event_management.event_management.block.dto.BlockDto;
+import com.mini_project_event_management.event_management.block.entity.Block;
 import com.mini_project_event_management.event_management.category.entity.Category;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -7,6 +9,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 public class CategoryDto implements Serializable {
@@ -29,6 +33,9 @@ public class CategoryDto implements Serializable {
     @Min(value = 0, message = "Price must be zero or positive")
     private int price;
 
+    private List<BlockDto> blocks;
+
+
     public CategoryDto toCategoryDto (Category category){
      CategoryDto categoryDto = new CategoryDto();
      categoryDto.setQuota(category.getQuota());
@@ -37,6 +44,11 @@ public class CategoryDto implements Serializable {
      categoryDto.setPrice(category.getPrice());
      categoryDto.setDescription(category.getDescription());
      categoryDto.setDescriptionDetail(category.getDescriptionDetail());
+     List<BlockDto> blocks = category.getBlocks().stream()
+             .map(Block::toBlockDto)
+             .collect(Collectors.toList());
+
+     categoryDto.setBlocks(blocks);
     return categoryDto;
     }
 
