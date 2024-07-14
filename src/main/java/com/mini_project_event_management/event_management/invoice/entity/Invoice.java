@@ -1,5 +1,6 @@
 package com.mini_project_event_management.event_management.invoice.entity;
 
+import com.mini_project_event_management.event_management.block.entity.Block;
 import com.mini_project_event_management.event_management.category.entity.Category;
 import com.mini_project_event_management.event_management.company.entity.Company;
 import com.mini_project_event_management.event_management.coupon.entity.Coupon;
@@ -44,6 +45,10 @@ public class Invoice {
      @ManyToOne(fetch = FetchType.LAZY, optional = false)
      @JoinColumn(name = "coupon_id")
      private Coupon coupon;
+
+     @ManyToOne(fetch = FetchType.LAZY, optional = false)
+     @JoinColumn(name = "block_id")
+     private Block block;
 
      @Column(name = "date_start", nullable = false)
      private LocalDate dateStart;
