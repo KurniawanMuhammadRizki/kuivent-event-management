@@ -77,6 +77,9 @@ public class Invoice {
      @Column(name = "city", nullable = false)
      private String city;
 
+     @Column(name = "block_name", nullable = false)
+     private String BlockName;
+
      @Column(name = "event_type", nullable = false)
      private String eventType;
 
