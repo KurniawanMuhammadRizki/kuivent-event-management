@@ -1,5 +1,7 @@
 package com.mini_project_event_management.event_management.category.service.impl;
 
+import com.mini_project_event_management.event_management.block.dto.BlockDto;
+import com.mini_project_event_management.event_management.block.entity.Block;
 import com.mini_project_event_management.event_management.category.dto.CategoryDto;
 import com.mini_project_event_management.event_management.category.entity.Category;
 import com.mini_project_event_management.event_management.category.repository.CategoryRepository;
@@ -17,7 +19,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
-    private final CategoryRepository categoryRepository;
+    private final CategoryRepository  categoryRepository;
     private final EventService eventService;
 
     public CategoryServiceImpl(CategoryRepository categoryRepository, EventService eventService){
@@ -59,6 +61,8 @@ public class CategoryServiceImpl implements CategoryService {
         categoryDto.setDescription(category.get().getDescription());
         categoryDto.setDescriptionDetail(category.get().getDescriptionDetail());
         categoryDto.setEventId(category.get().getEvent().getId());
+        List<BlockDto> block = category.get().getBlocks().stream().map(Block::toBlockDto).collect(Collectors.toList());
+        categoryDto.setBlocks(block);
         return categoryDto;
     }
 
@@ -82,6 +86,8 @@ public class CategoryServiceImpl implements CategoryService {
         dto.setQuota(category.getQuota());
         dto.setDescription(category.getDescription());
         dto.setDescriptionDetail(category.getDescriptionDetail());
+        List<BlockDto> block = category.getBlocks().stream().map(Block::toBlockDto).collect(Collectors.toList());
+        dto.setBlocks(block);
         return dto;
     }
 
