@@ -54,4 +54,16 @@ public class PointServiceImpl implements PointService {
         newPoint.setExpiredAt(expiredAt);
         pointRepository.save(newPoint);
     }
+
+    @Override
+    public Integer getPointsByCompanyId(Long companyId) {
+        Integer totalPoints = pointRepository.sumPointsByCompanyId(companyId);
+        return totalPoints != null ? totalPoints : 0;
+    }
+
+    @Override
+    @Transactional
+    public int softDeletePointsByCompanyId(Long companyId) {
+        return pointRepository.softDeletePointsByCompanyId(companyId);
+    }
 }
