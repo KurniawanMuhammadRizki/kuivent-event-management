@@ -17,6 +17,7 @@ import com.mini_project_event_management.event_management.invoice.dto.InvoiceDto
 import com.mini_project_event_management.event_management.invoice.entity.Invoice;
 import com.mini_project_event_management.event_management.invoice.repository.InvoiceRepository;
 import com.mini_project_event_management.event_management.invoice.service.InvoiceService;
+import com.mini_project_event_management.event_management.point.service.PointService;
 import com.mini_project_event_management.event_management.voucher.entity.Voucher;
 import com.mini_project_event_management.event_management.voucher.service.VoucherService;
 import lombok.extern.java.Log;
@@ -36,8 +37,9 @@ public class InvoiceServiceImpl implements InvoiceService {
      private final CouponService couponService;
      private final CategoryService categoryService;
      private final BlockService blockService;
+     private final PointService pointService;
 
-     public InvoiceServiceImpl(InvoiceRepository invoiceRepository, EventService eventService, CouponService couponService, VoucherService voucherService, CompanyService companyService, CategoryService categoryService, BlockService blockService) {
+     public InvoiceServiceImpl(InvoiceRepository invoiceRepository, EventService eventService, CouponService couponService, VoucherService voucherService, CompanyService companyService, CategoryService categoryService, BlockService blockService, PointService pointService) {
           this.invoiceRepository = invoiceRepository;
           this.eventService = eventService;
           this.couponService = couponService;
@@ -45,6 +47,7 @@ public class InvoiceServiceImpl implements InvoiceService {
           this.companyService = companyService;
           this.categoryService = categoryService;
           this.blockService = blockService;
+          this.pointService = pointService;
      }
 
      @Override
@@ -88,12 +91,20 @@ public class InvoiceServiceImpl implements InvoiceService {
                finalPrice -= (finalPrice * voucher.getDiscountPercent() / 100);
           }
 
-          if (invoiceDto.getPointAmount() != null) {
-               //cek pointnya expired apa engga
-               //ini belom ada pengurangan ke companynya
-               invoice.setPointAmount(invoiceDto.getPointAmount());
-               finalPrice -= invoiceDto.getPointAmount();
+          if(invoiceDto.isUsePoint()){
+               int companyPoint = pointService.getPointsByCompanyId(company.getId());
+               invoice.setPointAmount(companyPoint);
+               finalPrice -= companyPoint;
+               pointService.softDeletePointsByCompanyId(company.getId());
           }
+
+//          if (invoiceDto.getPointAmount() != null) {
+//               //cek pointnya expired apa engga
+//               //ini belom ada pengurangan ke companynya
+//
+//               invoice.setPointAmount(invoiceDto.getPointAmount());
+//               finalPrice -= invoiceDto.getPointAmount();
+//          }
 
           if (invoiceDto.getCouponId() != null) {
                Coupon coupon = couponService.getCouponById(invoiceDto.getCouponId());

@@ -23,4 +23,5 @@ public class InvoiceDto {
      private Long blockId;
      @Min(value = 0, message = "Point amount must be zero or positive")
      private Integer pointAmount;
+     private  boolean usePoint;
 }
