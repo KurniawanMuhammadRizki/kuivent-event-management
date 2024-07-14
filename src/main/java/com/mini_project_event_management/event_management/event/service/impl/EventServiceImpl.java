@@ -9,6 +9,7 @@ import com.mini_project_event_management.event_management.event.service.EventSer
 import com.mini_project_event_management.event_management.eventType.entity.EventType;
 import com.mini_project_event_management.event_management.eventType.service.EventTypeService;
 import com.mini_project_event_management.event_management.exceptions.DataNotFoundException;
+import com.mini_project_event_management.event_management.helpers.SlugifyHelper;
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Lazy;
@@ -83,7 +84,7 @@ public class EventServiceImpl implements EventService {
     private Event eventDtoToEvent(EventDto eventDto){
         Instant now = Instant.now();
         EventType eventType = eventTypeService.getEventTypeById(Math.toIntExact(eventDto.getEventTypeId()));
-
+        String slug = SlugifyHelper.slugify(eventDto.getName());
         Event event = new Event();
         event.setName(eventDto.getName());
         event.setCity(eventDto.getCity());
@@ -97,6 +98,7 @@ public class EventServiceImpl implements EventService {
         event.setHourStart(eventDto.getHourStart());
         event.setHourEnd(eventDto.getHourEnd());
         event.setEventType(eventType);
+        event.setSlug(slug);
         event.setCreatedAt(now);
         event.setUpdatedAt(now);
 
