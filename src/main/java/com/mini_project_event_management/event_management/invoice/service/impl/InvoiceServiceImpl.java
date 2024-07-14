@@ -54,7 +54,7 @@ public class InvoiceServiceImpl implements InvoiceService {
           Event event = eventService.getEventById(invoiceDto.getEventId());
           Company company = companyService.getCompanyById(invoiceDto.getCompanyId());
           CategoryDto categoryDto = categoryService.getCategoryById(invoiceDto.getCategoryId());
-          Block block = blockService.
+          Block block = blockService.getBlockById(invoiceDto.getBlockId());
           Invoice invoice = new Invoice();
           Category category = categoryDto.toEntity();
           double finalPrice = categoryDto.getPrice();
@@ -70,6 +70,8 @@ public class InvoiceServiceImpl implements InvoiceService {
           invoice.setDateStart(event.getDateStart().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
           invoice.setDateEnd(event.getDateEnd().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
           invoice.setCity(event.getCity());
+          invoice.setBlock(block);
+          invoice.setBlockName(block.getName());
           //masih ada error
           invoice.setEventType("aw");
           invoice.setCompany(company);
