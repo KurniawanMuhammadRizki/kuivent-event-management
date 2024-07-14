@@ -66,13 +66,21 @@ public class EventServiceImpl implements EventService {
         return eventDto;
     }
 
-
-
     @Override
-    public Page<EventDto> getAllEventsPaginated(Pageable pageable) {
-        return eventRepository.findAll(pageable)
-                .map(Event::toEventDto);
+    public Page<EventDto> getAllEventsPaginated(String search, Pageable pageable) {
+        if (search != null && !search.isEmpty()) {
+            return eventRepository.findByNameContainingIgnoreCaseOrCityContainingIgnoreCase(search, search, pageable)
+                    .map(Event::toEventDto);
+        } else {
+            return eventRepository.findAll(pageable)
+                    .map(Event::toEventDto);
+        }
     }
+//    @Override
+//    public Page<EventDto> getAllEventsPaginated(Pageable pageable) {
+//        return eventRepository.findAll(pageable)
+//                .map(Event::toEventDto);
+//    }
 
     @Override
     public EventDto creteEvent(EventDto eventDto){

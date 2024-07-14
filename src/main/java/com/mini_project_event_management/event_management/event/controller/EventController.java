@@ -7,6 +7,8 @@ import com.mini_project_event_management.event_management.responses.Response;
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -33,12 +35,27 @@ public class EventController {
 
     @GetMapping("/paginated")
     @Transactional
-    public ResponseEntity<Response<org.springframework.data.domain.Page<EventDto>>> getAllEventsPaginated(
+    public ResponseEntity<Response<Page<EventDto>>> getAllEventsPaginated(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size) {
-        Page<EventDto> eventsPage = eventService.getAllEventsPaginated(PageRequest.of(page, size));
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(required = false) String search,
+            @RequestParam(defaultValue = "name") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDirection) {
+
+        Sort.Direction direction = sortDirection.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
+        Page<EventDto> eventsPage = eventService.getAllEventsPaginated(search, pageable);
         return Response.successfulResponse("Events fetched with pagination", eventsPage);
     }
+
+//    @GetMapping("/paginated")
+//    @Transactional
+//    public ResponseEntity<Response<org.springframework.data.domain.Page<EventDto>>> getAllEventsPaginated(
+//            @RequestParam(defaultValue = "0") int page,
+//            @RequestParam(defaultValue = "20") int size) {
+//        Page<EventDto> eventsPage = eventService.getAllEventsPaginated(search, pageable);
+//        return Response.successfulResponse("Events fetched with pagination", eventsPage);
+//    }
 
     @PostMapping("/create-event")
     public ResponseEntity<Response<EventDto>> createEvent(@Validated @RequestBody EventDto eventDto){
