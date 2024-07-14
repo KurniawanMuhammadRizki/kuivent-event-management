@@ -1,5 +1,7 @@
 package com.mini_project_event_management.event_management.invoice.service.impl;
 
+import com.mini_project_event_management.event_management.block.entity.Block;
+import com.mini_project_event_management.event_management.block.service.BlockService;
 import com.mini_project_event_management.event_management.category.dto.CategoryDto;
 import com.mini_project_event_management.event_management.category.entity.Category;
 import com.mini_project_event_management.event_management.category.service.CategoryService;
@@ -33,14 +35,16 @@ public class InvoiceServiceImpl implements InvoiceService {
      private final VoucherService voucherService;
      private final CouponService couponService;
      private final CategoryService categoryService;
+     private final BlockService blockService;
 
-     public InvoiceServiceImpl(InvoiceRepository invoiceRepository, EventService eventService, CouponService couponService, VoucherService voucherService, CompanyService companyService, CategoryService categoryService) {
+     public InvoiceServiceImpl(InvoiceRepository invoiceRepository, EventService eventService, CouponService couponService, VoucherService voucherService, CompanyService companyService, CategoryService categoryService, BlockService blockService) {
           this.invoiceRepository = invoiceRepository;
           this.eventService = eventService;
           this.couponService = couponService;
           this.voucherService = voucherService;
           this.companyService = companyService;
           this.categoryService = categoryService;
+          this.blockService = blockService;
      }
 
      @Override
@@ -50,6 +54,7 @@ public class InvoiceServiceImpl implements InvoiceService {
           Event event = eventService.getEventById(invoiceDto.getEventId());
           Company company = companyService.getCompanyById(invoiceDto.getCompanyId());
           CategoryDto categoryDto = categoryService.getCategoryById(invoiceDto.getCategoryId());
+          Block block = blockService.
           Invoice invoice = new Invoice();
           Category category = categoryDto.toEntity();
           double finalPrice = categoryDto.getPrice();
