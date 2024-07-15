@@ -16,6 +16,7 @@ import com.mini_project_event_management.event_management.eventType.service.Even
 import com.mini_project_event_management.event_management.exceptions.ApplicationException;
 import com.mini_project_event_management.event_management.exceptions.DataNotFoundException;
 import com.mini_project_event_management.event_management.invoice.dto.InvoiceDto;
+import com.mini_project_event_management.event_management.invoice.dto.InvoiceResponseDto;
 import com.mini_project_event_management.event_management.invoice.entity.Invoice;
 import com.mini_project_event_management.event_management.invoice.repository.InvoiceRepository;
 import com.mini_project_event_management.event_management.invoice.service.InvoiceService;
@@ -29,6 +30,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.security.SecureRandom;
 import java.time.Instant;
 import java.time.ZoneId;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Log
 @Service
 public class InvoiceServiceImpl implements InvoiceService {
@@ -138,5 +142,23 @@ public class InvoiceServiceImpl implements InvoiceService {
           String letter = companyName.length() < 3 ? companyName : companyName.substring(0, 3);
           int number = 100 + random.nextInt(900);
           return "INVOICE/"+ eventName.toUpperCase() + "/" + letter.toUpperCase() + number;
+     }
+
+     @Override
+     public List<InvoiceResponseDto> getInvoiceByEventId(Long id){
+          List<Invoice> invoices = invoiceRepository.findAllByEventId(id);
+          if(invoices == null || invoices.isEmpty()){
+               throw new DataNotFoundException("Invoice not found");
+          }
+          return invoices.stream().map(Invoice::toInvoiceResponseDto).collect(Collectors.toList());
+     }
+
+     @Override
+     public List<InvoiceResponseDto> getInvoiceByCompanyId(Long id){
+          List<Invoice> invoices = invoiceRepository.findAllByCompanyId(id);
+          if(invoices == null || invoices.isEmpty()){
+               throw new DataNotFoundException("Invoice not found");
+          }
+          return invoices.stream().map(Invoice::toInvoiceResponseDto).collect(Collectors.toList());
      }
 }
