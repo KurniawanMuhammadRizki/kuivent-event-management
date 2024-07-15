@@ -13,32 +13,31 @@ import java.time.LocalTime;
 public class TicketDto {
      @NotNull(message = "Event  cannot be null")
      private Long eventId;
-
-     @NotNull(message = "User  cannot be null")
-     private Long userId;
-
      private LocalDate dateStart;
      private LocalDate dateEnd;
      private LocalTime hourStart;
      private LocalTime hourEnd;
-
-     @NotBlank(message = "First name cannot be empty")
-     private String firstName;
-
-     @NotBlank(message = "Last name cannot be empty")
-     private String lastName;
-
-     @NotBlank(message = "Email cannot be empty")
-     private String email;
-
+     @NotBlank(message = "City cannot be empty")
+     private String city;
+     @NotBlank(message = "Event type cannot be empty")
+     private String eventType;
      @NotBlank(message = "Event name cannot be empty")
      private String eventName;
 
-     @NotBlank(message = "City cannot be empty")
-     private String city;
+     @NotNull(message = "User  cannot be null")
+     private Long userId;
+     @NotBlank(message = "First name cannot be empty")
+     private String firstName;
+     @NotBlank(message = "Last name cannot be empty")
+     private String lastName;
+     @NotBlank(message = "Email cannot be empty")
+     private String email;
 
-     @NotBlank(message = "Event type cannot be empty")
-     private String eventType;
+     @NotBlank(message = "Category name cannot be empty")
+     private String categoryName;
+     @NotBlank(message = "Block name cannot be empty")
+     private String blockName;
+     private String ticketCode;
 
      private static final SecureRandom random = new SecureRandom();
      public Ticket toTicket() {
