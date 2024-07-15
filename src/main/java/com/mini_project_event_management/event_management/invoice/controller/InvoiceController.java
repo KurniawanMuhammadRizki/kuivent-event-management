@@ -30,4 +30,10 @@ public class InvoiceController {
           List<InvoiceResponseDto> invoices = invoiceService.getInvoiceByEventId(id);
           return Response.successfulResponse("Invoice fetched successfully", invoices);
      }
+
+     @GetMapping("/company/{id}")
+     public ResponseEntity<Response<List<InvoiceResponseDto>>> getInvoiceByCompanyId(@PathVariable Long id){
+          List<InvoiceResponseDto> invoices = invoiceService.getInvoiceByCompanyId(id);
+          return Response.successfulResponse("Invoice fetched successfully", invoices);
+     }
 }

@@ -152,4 +152,13 @@ public class InvoiceServiceImpl implements InvoiceService {
           }
           return invoices.stream().map(Invoice::toInvoiceResponseDto).collect(Collectors.toList());
      }
+
+     @Override
+     public List<InvoiceResponseDto> getInvoiceByCompanyId(Long id){
+          List<Invoice> invoices = invoiceRepository.findAllByCompanyId(id);
+          if(invoices == null || invoices.isEmpty()){
+               throw new DataNotFoundException("Invoice not found");
+          }
+          return invoices.stream().map(Invoice::toInvoiceResponseDto).collect(Collectors.toList());
+     }
 }
