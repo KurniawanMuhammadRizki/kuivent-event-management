@@ -9,6 +9,8 @@ import java.io.Serializable;
 
 @Data
 public class BlockDto implements Serializable {
+     private Long id;
+
      @NotBlank(message = "Name cannot be empty")
      private String name;
 

@@ -62,6 +62,7 @@ public class Block implements Serializable {
 
      public BlockDto toBlockDto() {
           BlockDto blockDto = new BlockDto();
+          blockDto.setId(this.id);
           blockDto.setCategoryId(this.category.getId());
           blockDto.setName(this.name);
           blockDto.setBooked(this.isBooked);
