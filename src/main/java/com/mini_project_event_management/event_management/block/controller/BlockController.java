@@ -29,7 +29,7 @@ public class BlockController {
           return  Response.successfulResponse("Changed successfully, current status: ", status);
      }
 
-     @PostMapping("/category/{id}")
+     @GetMapping("/category/{id}")
      public ResponseEntity<Response<List<BlockDto>>> getBlockByCategoryId(@PathVariable Long id){
           var blocks = blockService.getBlockByCategoryId(id);
           return Response.successfulResponse("Blocks fetched successfully",  blocks );
