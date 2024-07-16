@@ -10,7 +10,9 @@ import com.mini_project_event_management.event_management.exceptions.DataNotFoun
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class BlockServiceImpl implements BlockService {
@@ -37,5 +39,23 @@ public class BlockServiceImpl implements BlockService {
                throw new DataNotFoundException("Block not found");
           }
           return block.orElse(null);
+     }
+
+     @Override
+     public boolean toggleBlockById(Long id) {
+          Block block = getBlockById(id);
+          boolean currentStatus = block.isBooked();
+          block.setBooked(!currentStatus);
+          blockRepository.save(block);
+          return block.isBooked();
+     }
+
+     @Override
+     public List<BlockDto> getBlockByCategoryId(Long id){
+          List<Block> blocks = blockRepository.findAllByCategoryId(id);
+          if(blocks == null || blocks.isEmpty()){
+               throw  new DataNotFoundException("Block not found");
+          }
+          return blocks.stream().map(Block::toBlockDto).collect(Collectors.toList());
      }
 }
