@@ -8,13 +8,13 @@ import java.io.Serializable;
 
 @Data
 public class SpeakerDto implements Serializable {
-    @NotBlank(message = "Name id  is required")
-    private String name;
-    private String profileImgUrl;
-    private String position;
-    private String about;
-    private String companyName;
-    @NotNull(message = "Event id  is required")
-    private Long eventId;
-    private String slug;
+     @NotBlank(message = "Name id  is required")
+     private String name;
+     private String profileImgUrl;
+     private String position;
+     private String about;
+     private String companyName;
+     @NotNull(message = "Event id  is required")
+     private Long eventId;
+     private String slug;
 }
