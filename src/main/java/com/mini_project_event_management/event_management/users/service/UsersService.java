@@ -7,6 +7,9 @@ import lombok.Data;
 
 
 public interface UsersService {
-    RegisterUserResponseDto register(RegisterUserRequestDto registerUserRequestDto);
-    Users getUserById(Long id);
+     RegisterUserResponseDto register(RegisterUserRequestDto registerUserRequestDto);
+
+     Users getUserById(Long id);
+
+     Users getUserByEmail(String email);
 }
