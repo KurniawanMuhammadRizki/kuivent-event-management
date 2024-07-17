@@ -90,15 +90,18 @@ public class Organizer implements Serializable {
           this.deletedAt = Instant.now();
      }
 
-//    public OrganizerDto toOrganizerDto(Organizer organizer){
-//        OrganizerDto dto = new OrganizerDto();
-//        dto.setName(this.name);
-//        dto.setEmail(this.email);
-//        dto.setPhoneNumber(this.phoneNumber);
-//        dto.setAddress(this.address);
-//        dto.setCity(this.city);
-//        dto.setWebsiteUrl(this.websiteUrl);
-//        dto.setAbout(this.about);
-//        List<VoucherDto> vouchers = this.vouchers.stream().map(Organizer::toOrganizerDto).collect(Collectors.toList())
-//    }
+    public OrganizerDto toOrganizerDto(Organizer organizer){
+        OrganizerDto dto = new OrganizerDto();
+        dto.setId(this.id);
+        dto.setName(this.name);
+        dto.setEmail(this.email);
+        dto.setPhoneNumber(this.phoneNumber);
+        dto.setAddress(this.address);
+        dto.setCity(this.city);
+        dto.setWebsiteUrl(this.websiteUrl);
+        dto.setAbout(this.about);
+        List<VoucherDto> vouchers = this.vouchers.stream().map(Voucher::toVoucherDto).collect(Collectors.toList());
+        dto.setVouchers(vouchers);
+        return dto;
+    }
 }

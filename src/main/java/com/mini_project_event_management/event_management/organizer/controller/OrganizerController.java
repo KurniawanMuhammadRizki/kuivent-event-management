@@ -16,15 +16,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/organizer")
 public class OrganizerController {
-    private final OrganizerService organizerService;
+     private final OrganizerService organizerService;
 
-    public OrganizerController(OrganizerService organizerService){
-        this.organizerService = organizerService;
-    }
+     public OrganizerController(OrganizerService organizerService) {
+          this.organizerService = organizerService;
+     }
 
-    @PostMapping("/register")
-    public ResponseEntity<Response<RegisterOrganizerResponseDto>> register(@RequestBody RegisterOrganizerRequestDto registerDto) {
-        var organizerRegistered = organizerService.register(registerDto);
-        return Response.successfulResponse("User registered successfully", organizerRegistered);
-    }
+     @PostMapping("/register")
+     public ResponseEntity<Response<RegisterOrganizerResponseDto>> register(@RequestBody RegisterOrganizerRequestDto registerDto) {
+          var organizerRegistered = organizerService.register(registerDto);
+          return Response.successfulResponse("User registered successfully", organizerRegistered);
+     }
 }
