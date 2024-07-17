@@ -12,26 +12,28 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/speakers")
 public class SpeakersController {
-    private final SpeakersService speakersService;
-    public SpeakersController(SpeakersService speakersService){
-        this.speakersService = speakersService;
-    }
+     private final SpeakersService speakersService;
 
-    @PostMapping
-    public ResponseEntity<Response<SpeakerDto>> addSpeaker(@Validated @RequestBody SpeakerDto speakerDto){
-        var createdSpeaker = speakersService.addSpeaker(speakerDto);
-        return Response.successfulResponse("Speaker created successfully" , createdSpeaker);
-    }
+     public SpeakersController(SpeakersService speakersService) {
+          this.speakersService = speakersService;
+     }
 
-    @GetMapping("/event/{id}")
-    public ResponseEntity<Response<List<SpeakerDto>>> getListSpeakersByEventId(@PathVariable Long id){
-        List<SpeakerDto> speakers = speakersService.getSpeakersByEventId(id);
-        return Response.successfulResponse("Speaker fetched successfully", speakers);
-    }
+     @PostMapping
+     public ResponseEntity<Response<SpeakerDto>> addSpeaker(@Validated @RequestBody SpeakerDto speakerDto) {
+          var createdSpeaker = speakersService.addSpeaker(speakerDto);
+          return Response.successfulResponse("Speaker created successfully", createdSpeaker);
+     }
 
+     @GetMapping("/event/{id}")
+     public ResponseEntity<Response<List<SpeakerDto>>> getListSpeakersByEventId(@PathVariable Long id) {
+          List<SpeakerDto> speakers = speakersService.getSpeakersByEventId(id);
+          return Response.successfulResponse("Speaker fetched successfully", speakers);
+     }
 
-
-
-
+     @GetMapping("/{slug}")
+     public ResponseEntity<Response<SpeakerDto>> getSpeakersBySlug(@PathVariable String slug) {
+          SpeakerDto speakers = speakersService.getSpeakersBySlug(slug);
+          return Response.successfulResponse("Speaker fetched successfully", speakers);
+     }
 
 }
