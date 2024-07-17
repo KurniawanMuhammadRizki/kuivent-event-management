@@ -34,4 +34,6 @@ public class VoucherController {
         voucherService.addVoucher(voucherDto);
         return Response.successfulResponse("Voucher added successfully");
     }
+
+
 }
