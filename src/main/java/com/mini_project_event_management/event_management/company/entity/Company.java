@@ -95,6 +95,7 @@ public class Company implements Serializable {
 
     public CompanyDto toCompanyDto(){
         CompanyDto dto = new CompanyDto();
+        dto.setId(this.id);
         dto.setName(this.name);
         dto.setAbout(this.about);
         dto.setCity(this.city);
