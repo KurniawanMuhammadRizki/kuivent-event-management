@@ -5,6 +5,8 @@ import com.mini_project_event_management.event_management.company.repository.Com
 import com.mini_project_event_management.event_management.company.service.CompanyService;
 import com.mini_project_event_management.event_management.organizer.entity.Organizer;
 import com.mini_project_event_management.event_management.organizer.service.OrganizerService;
+import com.mini_project_event_management.event_management.users.entity.Users;
+import com.mini_project_event_management.event_management.users.service.UsersService;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -15,9 +17,11 @@ import org.springframework.stereotype.Component;
 public class CurrentUser  {
     private final CompanyService companyService;
     private final OrganizerService organizerService;
-    public CurrentUser(CompanyService companyService, OrganizerService organizerService){
+    private final UsersService usersService;
+    public CurrentUser(CompanyService companyService, OrganizerService organizerService, UsersService usersService){
         this.companyService = companyService;
         this.organizerService = organizerService;
+        this.usersService = usersService;
     }
 
     public  Long getAuthorizedCompanyId(){
@@ -34,6 +38,13 @@ public class CurrentUser  {
         String requesterEmail = auth.getName();
         Organizer organizer = organizerService.getOrganizerByEmail(requesterEmail);
         return organizer.getId();
+    }
+
+    public Long getAuthorizedUsersId(){
+        SecurityContext ctx = SecurityContextHolder.getContext();
+        Authentication auth = ctx.getAuthentication();
+        String requesterEmail = auth.getName();
+
     }
 
 }
