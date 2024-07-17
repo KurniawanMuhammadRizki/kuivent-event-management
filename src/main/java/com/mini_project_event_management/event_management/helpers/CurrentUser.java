@@ -14,37 +14,39 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CurrentUser  {
-    private final CompanyService companyService;
-    private final OrganizerService organizerService;
-    private final UsersService usersService;
-    public CurrentUser(CompanyService companyService, OrganizerService organizerService, UsersService usersService){
-        this.companyService = companyService;
-        this.organizerService = organizerService;
-        this.usersService = usersService;
-    }
+public class CurrentUser {
+     private final CompanyService companyService;
+     private final OrganizerService organizerService;
+     private final UsersService usersService;
 
-    public  Long getAuthorizedCompanyId(){
-        SecurityContext ctx = SecurityContextHolder.getContext();
-        Authentication auth = ctx.getAuthentication();
-        String requesterEmail = auth.getName();
-        Company company = companyService.getCompanyByEmail(requesterEmail);
-        return company.getId();
-    }
+     public CurrentUser(CompanyService companyService, OrganizerService organizerService, UsersService usersService) {
+          this.companyService = companyService;
+          this.organizerService = organizerService;
+          this.usersService = usersService;
+     }
 
-    public  Long getAuthorizedOrganizerId(){
-        SecurityContext ctx = SecurityContextHolder.getContext();
-        Authentication auth = ctx.getAuthentication();
-        String requesterEmail = auth.getName();
-        Organizer organizer = organizerService.getOrganizerByEmail(requesterEmail);
-        return organizer.getId();
-    }
+     public Long getAuthorizedCompanyId() {
+          SecurityContext ctx = SecurityContextHolder.getContext();
+          Authentication auth = ctx.getAuthentication();
+          String requesterEmail = auth.getName();
+          Company company = companyService.getCompanyByEmail(requesterEmail);
+          return company.getId();
+     }
 
-    public Long getAuthorizedUsersId(){
-        SecurityContext ctx = SecurityContextHolder.getContext();
-        Authentication auth = ctx.getAuthentication();
-        String requesterEmail = auth.getName();
+     public Long getAuthorizedOrganizerId() {
+          SecurityContext ctx = SecurityContextHolder.getContext();
+          Authentication auth = ctx.getAuthentication();
+          String requesterEmail = auth.getName();
+          Organizer organizer = organizerService.getOrganizerByEmail(requesterEmail);
+          return organizer.getId();
+     }
 
-    }
+     public Long getAuthorizedUsersId() {
+          SecurityContext ctx = SecurityContextHolder.getContext();
+          Authentication auth = ctx.getAuthentication();
+          String requesterEmail = auth.getName();
+          Users users = usersService.getUserByEmail(requesterEmail);
+          return users.getId();
+     }
 
 }
