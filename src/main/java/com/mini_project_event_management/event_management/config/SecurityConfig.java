@@ -35,67 +35,67 @@ import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 @Log
 public class SecurityConfig {
 
-    private final RsaKeyConfigProperties rsaKeyConfigProperties;
+     private final RsaKeyConfigProperties rsaKeyConfigProperties;
 
-    private final UserDetailsServiceImpl userDetailsService;
-    private final CorsConfigurationSourceImpl corsConfigurationSource;
+     private final UserDetailsServiceImpl userDetailsService;
+     private final CorsConfigurationSourceImpl corsConfigurationSource;
 
-    public SecurityConfig(RsaKeyConfigProperties rsaKeyConfigProperties, UserDetailsServiceImpl userDetailsService, CorsConfigurationSourceImpl corsConfigurationSource){
-        this.rsaKeyConfigProperties = rsaKeyConfigProperties;
-        this.userDetailsService = userDetailsService;
-        this.corsConfigurationSource = corsConfigurationSource;
-    }
+     public SecurityConfig(RsaKeyConfigProperties rsaKeyConfigProperties, UserDetailsServiceImpl userDetailsService, CorsConfigurationSourceImpl corsConfigurationSource) {
+          this.rsaKeyConfigProperties = rsaKeyConfigProperties;
+          this.userDetailsService = userDetailsService;
+          this.corsConfigurationSource = corsConfigurationSource;
+     }
 
-    @Bean
-    public AuthenticationManager authManager(){
-        var authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService);
-        authProvider.setPasswordEncoder(passwordEncoder());
-        return new ProviderManager(authProvider);
-    }
+     @Bean
+     public AuthenticationManager authManager() {
+          var authProvider = new DaoAuthenticationProvider();
+          authProvider.setUserDetailsService(userDetailsService);
+          authProvider.setPasswordEncoder(passwordEncoder());
+          return new ProviderManager(authProvider);
+     }
 
-    @Bean
-    PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
-    }
+     @Bean
+     PasswordEncoder passwordEncoder() {
+          return new BCryptPasswordEncoder();
+     }
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, HandlerMappingIntrospector introspector) throws Exception{
-        return http.csrf(AbstractHttpConfigurer::disable).cors(cors -> cors.configurationSource(corsConfigurationSource)).authorizeHttpRequests(auth ->{
-                    auth.requestMatchers("error/**").permitAll();
-                    auth.requestMatchers("api/v1/auth/**").permitAll();
-                    auth.requestMatchers("api/v1/user/register").permitAll();
-                    auth.requestMatchers("api/v1/company/register").permitAll();
-                     auth.requestMatchers(HttpMethod.GET,"api/v1/company/{slug}").permitAll();
-                     auth.requestMatchers(HttpMethod.GET,"api/v1/rating/{eventId}").permitAll();
-                    auth.requestMatchers("api/v1/users/register").permitAll();
-                    auth.requestMatchers("api/v1/organizer/register").permitAll();
-                     auth.requestMatchers("api/v1/event/**").permitAll();
-                     auth.requestMatchers("api/v1/company/**").permitAll();
-                     auth.requestMatchers("api/v1/block/**").permitAll();
-                     auth.requestMatchers("api/v1/event-topic/**").permitAll();
-                    auth.requestMatchers("api/v1/user/forget-password").permitAll();
-                    auth.requestMatchers(HttpMethod.POST,"api/v1/voucher").hasAuthority("SCOPE_ROLE_ORGANIZER");
-                     auth.requestMatchers("api/v1/voucher/organizer").hasAuthority("SCOPE_ROLE_ORGANIZER");
-                    auth.anyRequest().authenticated();
-                }).sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .oauth2ResourceServer((oauth2) -> oauth2.jwt((jwt) -> jwt.decoder(jwtDecoder()))).userDetailsService(userDetailsService).httpBasic(Customizer.withDefaults()).build();
-    }
+     @Bean
+     public SecurityFilterChain filterChain(HttpSecurity http, HandlerMappingIntrospector introspector) throws Exception {
+          return http.csrf(AbstractHttpConfigurer::disable).cors(cors -> cors.configurationSource(corsConfigurationSource)).authorizeHttpRequests(auth -> {
+                       auth.requestMatchers("error/**").permitAll();
+                       auth.requestMatchers("api/v1/auth/**").permitAll();
+                       auth.requestMatchers("api/v1/user/register").permitAll();
+                       auth.requestMatchers("api/v1/company/register").permitAll();
+                       auth.requestMatchers(HttpMethod.GET, "api/v1/company/{slug}").permitAll();
+                       auth.requestMatchers(HttpMethod.GET, "api/v1/rating/{eventId}").permitAll();
+                       auth.requestMatchers("api/v1/users/register").permitAll();
+                       auth.requestMatchers("api/v1/organizer/register").permitAll();
+                       auth.requestMatchers("api/v1/event/**").permitAll();
+                       auth.requestMatchers("api/v1/company/**").permitAll();
+                       auth.requestMatchers("api/v1/block/**").permitAll();
+                       auth.requestMatchers("api/v1/event-topic/**").permitAll();
+                       auth.requestMatchers("api/v1/user/forget-password").permitAll();
+                       auth.requestMatchers(HttpMethod.POST, "api/v1/voucher").hasAuthority("SCOPE_ROLE_ORGANIZER");
+                       auth.requestMatchers("api/v1/voucher/organizer").hasAuthority("SCOPE_ROLE_ORGANIZER");
+                       auth.requestMatchers("api/v1/speakers").hasAuthority("SCOPE_ROLE_ORGANIZER");
+                       auth.anyRequest().authenticated();
+                  }).sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                  .oauth2ResourceServer((oauth2) -> oauth2.jwt((jwt) -> jwt.decoder(jwtDecoder()))).userDetailsService(userDetailsService).httpBasic(Customizer.withDefaults()).build();
+     }
 
 
+     @Bean
+     public JwtDecoder jwtDecoder() {
+          return NimbusJwtDecoder.withPublicKey(rsaKeyConfigProperties.publicKey()).build();
+     }
 
-    @Bean
-    public JwtDecoder jwtDecoder(){
-        return NimbusJwtDecoder.withPublicKey(rsaKeyConfigProperties.publicKey()).build();
-    }
+     @Bean
+     JwtEncoder jwtEncoder() {
+          JWK jwk = new RSAKey.Builder(rsaKeyConfigProperties.publicKey()).privateKey(rsaKeyConfigProperties.privateKey()).build();
 
-    @Bean
-    JwtEncoder jwtEncoder(){
-        JWK jwk = new RSAKey.Builder(rsaKeyConfigProperties.publicKey()).privateKey(rsaKeyConfigProperties.privateKey()).build();
-
-        JWKSource<SecurityContext> jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
-        return new NimbusJwtEncoder(jwks);
-    }
+          JWKSource<SecurityContext> jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
+          return new NimbusJwtEncoder(jwks);
+     }
 
 
 }
