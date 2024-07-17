@@ -2,6 +2,7 @@ package com.mini_project_event_management.event_management.voucher.entity;
 
 import com.mini_project_event_management.event_management.event.entity.Event;
 import com.mini_project_event_management.event_management.organizer.entity.Organizer;
+import com.mini_project_event_management.event_management.voucher.dto.VoucherDto;
 import jakarta.annotation.PreDestroy;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
@@ -65,6 +66,15 @@ public class Voucher implements Serializable {
     @PreDestroy
     void onDelete() {
         this.deletedAt = Instant.now();
+    }
+
+    public static VoucherDto toVoucherDto(Voucher voucher){
+        VoucherDto dto = new VoucherDto();
+        dto.setOrganizerId(voucher.getOrganizer().getId());
+        dto.setCode(voucher.getCode());
+       dto.setName(voucher.getName());
+       dto.setDiscountPercent(voucher.getDiscountPercent());
+       return dto;
     }
 
 }
