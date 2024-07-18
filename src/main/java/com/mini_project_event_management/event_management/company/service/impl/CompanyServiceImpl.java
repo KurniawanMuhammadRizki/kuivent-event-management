@@ -7,6 +7,7 @@ import com.mini_project_event_management.event_management.company.entity.Company
 import com.mini_project_event_management.event_management.company.repository.CompanyRepository;
 import com.mini_project_event_management.event_management.company.service.CompanyService;
 import com.mini_project_event_management.event_management.coupon.service.CouponService;
+import com.mini_project_event_management.event_management.exceptions.AlreadyExistException;
 import com.mini_project_event_management.event_management.exceptions.DataNotFoundException;
 import com.mini_project_event_management.event_management.helpers.CurrentUser;
 import com.mini_project_event_management.event_management.helpers.SlugifyHelper;
@@ -100,11 +101,20 @@ public class CompanyServiceImpl implements CompanyService {
      @Transactional
      @RateLimiter(name = "default")
      public RegisterCompanyResponseDto register(RegisterCompanyRequestDto registerDto) {
+          Boolean isNameExist = companyRepository.existsByName(registerDto.getName());
+          if (isNameExist) {
+               throw new AlreadyExistException("Company name already exist");
+          }
+
+          Boolean isEmailExist = companyRepository.existsByEmail(registerDto.getEmail());
+          if (isEmailExist) {
+               throw new AlreadyExistException("Company email already exist");
+          }
+
           Company company = registerDto.toEntity();
           String slug = SlugifyHelper.slugify(registerDto.getName());
           var password = passwordEncoder.encode(company.getPassword());
           company.setPassword(password);
-          company.setProfileUrl(" ");
           company.setSlug(slug);
 
           var companyRegistered = companyRepository.save(company);
