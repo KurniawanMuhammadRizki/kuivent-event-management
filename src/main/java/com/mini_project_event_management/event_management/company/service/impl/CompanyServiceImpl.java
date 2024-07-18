@@ -123,12 +123,12 @@ public class CompanyServiceImpl implements CompanyService {
           referralCodeDto.setCompanyId(companyRegistered.getId());
           referralCodeDto.setCode(slug);
           referralCodeService.addReferralCode(referralCodeDto);
-
           if (!registerDto.getReferralCode().isBlank()) {
                ReferralCode referralCode = referralCodeService.getReferralCodeByCode(registerDto.getReferralCode());
                couponService.addCoupon(companyRegistered.getId(), referralCode.getId());
                pointService.addPoint(referralCode.getCompany().getId());
           }
+
 
           RegisterCompanyResponseDto registerCompanyResponseDto = new RegisterCompanyResponseDto();
           registerCompanyResponseDto.setId(companyRegistered.getId());

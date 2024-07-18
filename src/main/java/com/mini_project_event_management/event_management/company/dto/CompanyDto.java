@@ -19,6 +19,7 @@ public class CompanyDto {
      private String profileUrl;
      private String about;
      private String slug;
+     private String referralCode;
      private List<ProductsDto> products;
 
      public CompanyDto toCompanyDto(Company company) {
