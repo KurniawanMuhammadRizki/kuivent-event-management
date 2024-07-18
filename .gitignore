@@ -33,8 +33,12 @@ build/
 .vscode/
 /src/main/resources/application-secret.properties
 
+<<<<<<< HEAD
+.env**/.DS_Store
+=======
 .env
 .DS_Store**/.DS_Store
 .DS_Store.DS_Store
 **/.DS_Store
 
+>>>>>>> ffbbf97af907bc040421495954149ae6fd04a13f

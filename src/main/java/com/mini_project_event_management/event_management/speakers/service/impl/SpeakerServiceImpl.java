@@ -44,6 +44,7 @@ public class SpeakerServiceImpl implements SpeakersService {
           speakers.setCompanyName(speakerDto.getCompanyName());
           speakers.setPosition(speakerDto.getPosition());
           speakers.setAbout(speakerDto.getAbout());
+          speakers.setProfileImageUrl(speakerDto.getProfileImgUrl());
           speakers.setCreatedAt(now);
           speakers.setUpdatedAt(now);
           speakers.setSlug(slug);
