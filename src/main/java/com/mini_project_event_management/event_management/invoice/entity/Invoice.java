@@ -5,6 +5,7 @@ import com.mini_project_event_management.event_management.category.entity.Catego
 import com.mini_project_event_management.event_management.company.entity.Company;
 import com.mini_project_event_management.event_management.coupon.entity.Coupon;
 import com.mini_project_event_management.event_management.event.entity.Event;
+import com.mini_project_event_management.event_management.invoice.dto.InvoiceResponseDto;
 import com.mini_project_event_management.event_management.voucher.entity.Voucher;
 import jakarta.annotation.PreDestroy;
 import jakarta.persistence.*;
@@ -126,5 +127,42 @@ public class Invoice {
      @PreDestroy
      void onDelete() {
           this.deletedAt = Instant.now();
+     }
+
+     public static InvoiceResponseDto toInvoiceResponseDto(Invoice invoice) {
+          InvoiceResponseDto dto = new InvoiceResponseDto();
+          dto.setEventName(invoice.getEventName());
+          dto.setCity(invoice.getCity());
+          dto.setAddress(invoice.getEvent().getAddress());
+          dto.setDateStart(invoice.getDateStart());
+          dto.setDateEnd(invoice.getDateEnd());
+          dto.setHourStart(invoice.getHourStart());
+          dto.setHourEnd(invoice.getHourEnd());
+          dto.setEventType(invoice.getEventType());
+          dto.setEmail(invoice.getEmail());
+          dto.setCompanyName(invoice.getCompany().getName());
+          dto.setCategoryName(invoice.getCategoryName());
+          dto.setPrice(invoice.getPrice());
+          dto.setBlockName(invoice.getBlockName());
+          if (invoice.getVoucher() == null) {
+               dto.setVoucherUsed(false);
+               dto.setDiscountPercent(null);
+          } else {
+               dto.setVoucherUsed(true);
+               dto.setDiscountPercent(invoice.getVoucher().getDiscountPercent());
+          }
+
+          dto.setVoucherName(invoice.getVoucherName());
+          dto.setCouponUsed(invoice.getCouponUsed());
+          if (invoice.getPointAmount() == null) {
+               dto.setPointUsed(false);
+          } else {
+               dto.setPointUsed(true);
+          }
+
+          dto.setPointUsed(invoice.getCouponUsed());
+          dto.setInvoiceCode(invoice.getInvoiceCode());
+          dto.setTotalPrice(invoice.getTotalPrice());
+          return dto;
      }
 }

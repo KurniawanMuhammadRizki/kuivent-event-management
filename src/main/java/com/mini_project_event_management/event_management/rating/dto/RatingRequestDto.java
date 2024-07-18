@@ -9,8 +9,8 @@ import java.time.Instant;
 
 @Data
 public class RatingRequestDto {
-    @NotNull(message = "User id type cannot be null")
-    private Long userId;
+//    @NotNull(message = "User id type cannot be null")
+//    private Long userId;
 
     @NotNull(message = "Event id type cannot be null")
     private Long eventId;

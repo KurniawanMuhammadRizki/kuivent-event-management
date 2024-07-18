@@ -11,9 +11,12 @@ import com.mini_project_event_management.event_management.coupon.entity.Coupon;
 import com.mini_project_event_management.event_management.coupon.service.CouponService;
 import com.mini_project_event_management.event_management.event.entity.Event;
 import com.mini_project_event_management.event_management.event.service.EventService;
+import com.mini_project_event_management.event_management.eventType.entity.EventType;
+import com.mini_project_event_management.event_management.eventType.service.EventTypeService;
 import com.mini_project_event_management.event_management.exceptions.ApplicationException;
 import com.mini_project_event_management.event_management.exceptions.DataNotFoundException;
 import com.mini_project_event_management.event_management.invoice.dto.InvoiceDto;
+import com.mini_project_event_management.event_management.invoice.dto.InvoiceResponseDto;
 import com.mini_project_event_management.event_management.invoice.entity.Invoice;
 import com.mini_project_event_management.event_management.invoice.repository.InvoiceRepository;
 import com.mini_project_event_management.event_management.invoice.service.InvoiceService;
@@ -27,6 +30,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.security.SecureRandom;
 import java.time.Instant;
 import java.time.ZoneId;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Log
 @Service
 public class InvoiceServiceImpl implements InvoiceService {
@@ -38,8 +44,9 @@ public class InvoiceServiceImpl implements InvoiceService {
      private final CategoryService categoryService;
      private final BlockService blockService;
      private final PointService pointService;
+     private final EventTypeService eventTypeService;
 
-     public InvoiceServiceImpl(InvoiceRepository invoiceRepository, EventService eventService, CouponService couponService, VoucherService voucherService, CompanyService companyService, CategoryService categoryService, BlockService blockService, PointService pointService) {
+     public InvoiceServiceImpl(InvoiceRepository invoiceRepository, EventService eventService, CouponService couponService, VoucherService voucherService, CompanyService companyService, CategoryService categoryService, BlockService blockService, PointService pointService, EventTypeService eventTypeService ) {
           this.invoiceRepository = invoiceRepository;
           this.eventService = eventService;
           this.couponService = couponService;
@@ -48,6 +55,7 @@ public class InvoiceServiceImpl implements InvoiceService {
           this.categoryService = categoryService;
           this.blockService = blockService;
           this.pointService = pointService;
+          this.eventTypeService = eventTypeService;
      }
 
      @Override
@@ -58,8 +66,10 @@ public class InvoiceServiceImpl implements InvoiceService {
           Company company = companyService.getCompanyById(invoiceDto.getCompanyId());
           CategoryDto categoryDto = categoryService.getCategoryById(invoiceDto.getCategoryId());
           Block block = blockService.getBlockById(invoiceDto.getBlockId());
+          EventType eventType = eventTypeService.getEventTypeById(Math.toIntExact(event.getEventType().getId()));
           Invoice invoice = new Invoice();
           Category category = categoryDto.toEntity();
+
           double finalPrice = categoryDto.getPrice();
 
           category.setEvent(event);
@@ -75,8 +85,7 @@ public class InvoiceServiceImpl implements InvoiceService {
           invoice.setCity(event.getCity());
           invoice.setBlock(block);
           invoice.setBlockName(block.getName());
-          //masih ada error
-          invoice.setEventType("aw");
+          invoice.setEventType(eventType.getName());
           invoice.setCompany(company);
           invoice.setEmail(company.getEmail());
 
@@ -124,8 +133,7 @@ public class InvoiceServiceImpl implements InvoiceService {
           }
 
           invoice.setTotalPrice((float) finalPrice);
-          //masih ada error mau pake slug aja
-          invoice.setInvoiceCode(generateInvoiceCode(event.getName(), company.getEmail()));
+          invoice.setInvoiceCode(generateInvoiceCode(event.getSlug(), company.getSlug()));
           invoiceRepository.save(invoice);
      }
 
@@ -134,5 +142,23 @@ public class InvoiceServiceImpl implements InvoiceService {
           String letter = companyName.length() < 3 ? companyName : companyName.substring(0, 3);
           int number = 100 + random.nextInt(900);
           return "INVOICE/"+ eventName.toUpperCase() + "/" + letter.toUpperCase() + number;
+     }
+
+     @Override
+     public List<InvoiceResponseDto> getInvoiceByEventId(Long id){
+          List<Invoice> invoices = invoiceRepository.findAllByEventId(id);
+          if(invoices == null || invoices.isEmpty()){
+               throw new DataNotFoundException("Invoice not found");
+          }
+          return invoices.stream().map(Invoice::toInvoiceResponseDto).collect(Collectors.toList());
+     }
+
+     @Override
+     public List<InvoiceResponseDto> getInvoiceByCompanyId(Long id){
+          List<Invoice> invoices = invoiceRepository.findAllByCompanyId(id);
+          if(invoices == null || invoices.isEmpty()){
+               throw new DataNotFoundException("Invoice not found");
+          }
+          return invoices.stream().map(Invoice::toInvoiceResponseDto).collect(Collectors.toList());
      }
 }

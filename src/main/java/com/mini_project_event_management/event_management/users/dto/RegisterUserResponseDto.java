@@ -7,19 +7,19 @@ import lombok.Data;
 
 @Data
 public class RegisterUserResponseDto {
-    @NotBlank(message = "Email cannot be empty")
-    @Column(name = "email", nullable = false)
-    private String email;
+     @NotBlank(message = "Email cannot be empty")
+     @Column(name = "email", nullable = false)
+     private String email;
 
-    @NotBlank(message = "Slug number cannot be empty")
-    @Column(name = "slug", nullable = false)
-    private String slug;
+     @NotBlank(message = "Slug number cannot be empty")
+     @Column(name = "slug", nullable = false)
+     private String slug;
 
-    public Users toEntity() {
-        Users user = new Users();
-        user.setEmail(email);
-        user.setSlug(slug);
-        return user;
-    }
+     public Users toEntity() {
+          Users user = new Users();
+          user.setEmail(email);
+          user.setSlug(slug);
+          return user;
+     }
 
 }

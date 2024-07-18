@@ -12,7 +12,9 @@ import com.mini_project_event_management.event_management.voucher.service.Vouche
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class VoucherServiceImpl implements VoucherService {
@@ -68,5 +70,17 @@ public class VoucherServiceImpl implements VoucherService {
           }
           return voucher.orElse(null);
      }
+
+     @Override
+     public List<VoucherDto> getVoucherListByOrganizerId(){
+          Long organizerId =  currentUser.getAuthorizedOrganizerId();
+          List<Voucher> vouchers = voucherRepository.findByOrganizerId(organizerId);
+          if(vouchers == null || vouchers.isEmpty()){
+               throw new DataNotFoundException("Voucher not found");
+          }
+          return vouchers.stream().map(Voucher::toVoucherDto).collect(Collectors.toList());
+     }
+
+
 
 }

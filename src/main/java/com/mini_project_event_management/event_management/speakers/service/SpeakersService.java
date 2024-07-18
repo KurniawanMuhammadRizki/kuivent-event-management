@@ -6,8 +6,11 @@ import com.mini_project_event_management.event_management.speakers.entity.Speake
 import java.util.List;
 
 public interface SpeakersService {
-    SpeakerDto addSpeaker(SpeakerDto speakerDto);
+     SpeakerDto addSpeaker(SpeakerDto speakerDto);
 
-    Speakers getSpeakerById(Long id);
-  List<SpeakerDto> getSpeakersByEventId(Long id);
+     Speakers getSpeakerById(Long id);
+
+     SpeakerDto getSpeakersBySlug(String slug);
+
+     List<SpeakerDto> getSpeakersByEventId(Long id);
 }

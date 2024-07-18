@@ -1,7 +1,10 @@
 package com.mini_project_event_management.event_management.tickets.entity;
 
+import com.mini_project_event_management.event_management.block.entity.Block;
+import com.mini_project_event_management.event_management.category.entity.Category;
 import com.mini_project_event_management.event_management.event.entity.Event;
 import com.mini_project_event_management.event_management.eventType.entity.EventType;
+import com.mini_project_event_management.event_management.tickets.dto.TicketDto;
 import com.mini_project_event_management.event_management.users.entity.Users;
 import jakarta.annotation.PreDestroy;
 import jakarta.persistence.*;
@@ -34,6 +37,14 @@ public class Ticket implements Serializable {
      @ManyToOne(fetch = FetchType.LAZY, optional = false)
      @JoinColumn(name = "user_id", nullable = false)
      private Users users;
+
+     @ManyToOne(fetch = FetchType.LAZY, optional = false)
+     @JoinColumn(name = "category_id", nullable = false)
+     private Category category;
+
+     @ManyToOne(fetch = FetchType.LAZY, optional = false)
+     @JoinColumn(name = "block_id")
+     private Block block;
 
      @Column(name = "date_start", nullable = false)
      private LocalDate dateStart;
@@ -68,6 +79,12 @@ public class Ticket implements Serializable {
      @Column(name = "event_type", nullable = false)
      private String eventType;
 
+     @Column(name = "category_name", nullable = false)
+     private String categoryName;
+
+     @Column(name = "block_name", nullable = false)
+     private String blockName;
+
      @ColumnDefault("CURRENT_TIMESTAMP")
      @Column(name = "created_at")
      private Instant createdAt = Instant.now();
@@ -93,5 +110,26 @@ public class Ticket implements Serializable {
      @PreDestroy
      void onDelete() {
           this.deletedAt = Instant.now();
+     }
+
+     public static TicketDto toTicketDto(Ticket ticket){
+          TicketDto dto = new TicketDto();
+          dto.setEventId(ticket.event.getId());
+          dto.setUserId(ticket.users.getId());
+          dto.setDateEnd(ticket.dateEnd);
+          dto.setDateStart(ticket.dateStart);
+          dto.setHourStart(ticket.hourStart);
+          dto.setHourEnd(ticket.hourEnd);
+          dto.setFirstName(ticket.firstName);
+          dto.setLastName(ticket.lastName);
+          dto.setEmail(ticket.users.getEmail());
+          dto.setEventName(ticket.eventName);
+          dto.setCity(ticket.city);
+          dto.setEventType(ticket.eventType);
+          dto.setTicketCode(ticket.ticketCode);
+          dto.setBlockName(ticket.blockName);
+          dto.setCategoryName(ticket.categoryName);
+
+          return dto;
      }
 }

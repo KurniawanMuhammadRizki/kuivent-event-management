@@ -29,6 +29,8 @@ public class RegisterCompanyRequestDto {
 
      private String referralCode;
 
+     private String profileUrl;
+
 
      public Company toEntity() {
           Company company = new Company();
@@ -39,6 +41,7 @@ public class RegisterCompanyRequestDto {
           company.setCity(city);
           company.setAddress(address);
           company.setWebsiteUrl(websiteUrl);
+          company.setProfileUrl(profileUrl);
           return company;
      }
 }

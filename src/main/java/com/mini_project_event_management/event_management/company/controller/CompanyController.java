@@ -15,30 +15,35 @@ import java.util.List;
 @RequestMapping("/api/v1/company")
 public class CompanyController {
 
-    private final CompanyService companyService;
+     private final CompanyService companyService;
 
-    public CompanyController(CompanyService companyService){
-        this.companyService = companyService;
-    }
+     public CompanyController(CompanyService companyService) {
+          this.companyService = companyService;
+     }
 
-    @PostMapping("/register")
-    public ResponseEntity<Response<RegisterCompanyResponseDto>> register( @Validated  @RequestBody RegisterCompanyRequestDto registerDto) {
-        var companyRegistered = companyService.register(registerDto);
-        return Response.successfulResponse("Company registered successfully", companyRegistered);
-    }
+     @PostMapping("/register")
+     public ResponseEntity<Response<RegisterCompanyResponseDto>> register(@Validated @RequestBody RegisterCompanyRequestDto registerDto) {
+          var companyRegistered = companyService.register(registerDto);
+          return Response.successfulResponse("Company registered successfully", companyRegistered);
+     }
 
-    @GetMapping
-    public ResponseEntity<Response<List<CompanyDto>>> getAllCompany(){
-        var companies = companyService.getAllCompany();
-        return Response.successfulResponse("Company fetched successfully", companies);
-    }
+     @GetMapping
+     public ResponseEntity<Response<List<CompanyDto>>> getAllCompany() {
+          var companies = companyService.getAllCompany();
+          return Response.successfulResponse("Company fetched successfully", companies);
+     }
 
-    @GetMapping("{slug}")
-    public ResponseEntity<Response<CompanyDto>> getCompanyDtoBySlug(@PathVariable String slug){
-        var company = companyService.getCompanyDtoBySlug(slug);
-        return Response.successfulResponse("Company fetched successfully", company);
-    }
+     @GetMapping("{slug}")
+     public ResponseEntity<Response<CompanyDto>> getCompanyDtoBySlug(@PathVariable String slug) {
+          var company = companyService.getCompanyDtoBySlug(slug);
+          return Response.successfulResponse("Company fetched successfully", company);
+     }
 
+     @GetMapping("/profile")
+     public ResponseEntity<Response<CompanyDto>> getCompany() {
+          CompanyDto company = companyService.getCompany();
+          return Response.successfulResponse("Company fetched successfully", company);
+     }
 
 
 }
