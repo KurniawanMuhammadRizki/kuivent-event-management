@@ -22,44 +22,45 @@ import java.util.List;
 
 @Data
 public class EventDto {
-    @NotBlank(message = "Name cannot be empty")
-    private String name;
-    @NotBlank(message = "Address cannot be empty")
-    private String address;
-    @NotBlank(message = "City cannot be empty")
-    private String city;
+     private Long id;
+     @NotBlank(message = "Name cannot be empty")
+     private String name;
+     @NotBlank(message = "Address cannot be empty")
+     private String address;
+     @NotBlank(message = "City cannot be empty")
+     private String city;
 
-    private String websiteUrl;
-    private String imageUrl;
-    @NotBlank(message = "Description cannot be empty")
-    private String description;
+     private String websiteUrl;
+     private String imageUrl;
+     @NotBlank(message = "Description cannot be empty")
+     private String description;
 
-    private String descriptionDetail;
-    private String slug;
+     private String descriptionDetail;
+     private String slug;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd")
-    private Date dateStart;
+     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd")
+     private Date dateStart;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd")
-    private Date dateEnd;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
-    private Date hourStart;
+     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd")
+     private Date dateEnd;
+     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
+     private Date hourStart;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
-    private Date hourEnd;
+     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
+     private Date hourEnd;
 
-    @Min(value = 0, message = "Capacity must be zero or positive")
-    private int capacity;
+     @Min(value = 0, message = "Capacity must be zero or positive")
+     private int capacity;
 
-    @NotNull(message = "Event type cannot be null")
-    private Long eventTypeId;
+     @NotNull(message = "Event type cannot be null")
+     private Long eventTypeId;
 
-    private List<TopicDto> topics;
-   private List<CategoryDto> categories;
-   private List<CompanyDto> companies;
-   private List<SpeakerDto> speakers;
-   private List<RatingDto> ratings;
-   private EventTypeDto eventType;
+     private List<TopicDto> topics;
+     private List<CategoryDto> categories;
+     private List<CompanyDto> companies;
+     private List<SpeakerDto> speakers;
+     private List<RatingDto> ratings;
+     private EventTypeDto eventType;
 
 
 }

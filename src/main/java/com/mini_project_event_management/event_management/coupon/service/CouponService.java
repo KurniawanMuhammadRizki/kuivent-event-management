@@ -7,4 +7,5 @@ public interface CouponService {
      void addCoupon(Long companyId, Long referralId);
      void setCouponUsed(Long id);
      Coupon getCouponById(Long id);
+     Integer getCountCouponByReferralId(Long companyId);
 }

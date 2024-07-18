@@ -7,7 +7,9 @@ import com.mini_project_event_management.event_management.company.entity.Company
 import com.mini_project_event_management.event_management.company.repository.CompanyRepository;
 import com.mini_project_event_management.event_management.company.service.CompanyService;
 import com.mini_project_event_management.event_management.coupon.service.CouponService;
+import com.mini_project_event_management.event_management.exceptions.AlreadyExistException;
 import com.mini_project_event_management.event_management.exceptions.DataNotFoundException;
+import com.mini_project_event_management.event_management.helpers.CurrentUser;
 import com.mini_project_event_management.event_management.helpers.SlugifyHelper;
 import com.mini_project_event_management.event_management.point.service.PointService;
 import com.mini_project_event_management.event_management.referralCode.dto.ReferralCodeDto;
@@ -27,105 +29,125 @@ import java.util.Optional;
 
 @Service
 public class CompanyServiceImpl implements CompanyService {
-    private final CompanyRepository companyRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final ReferralCodeService referralCodeService;
-    private final CouponService couponService;
-    private final PointService pointService;
+     private final CompanyRepository companyRepository;
+     private final PasswordEncoder passwordEncoder;
+     private final ReferralCodeService referralCodeService;
+     private final CouponService couponService;
+     private final PointService pointService;
+     private final CurrentUser currentUser;
 
-    public CompanyServiceImpl(
-            CompanyRepository companyRepository,
-            PasswordEncoder passwordEncoder,
-            @Lazy ReferralCodeService referralCodeService,
-            @Lazy CouponService couponService,
-            @Lazy PointService pointService
-    ){
-        this.companyRepository = companyRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.referralCodeService = referralCodeService;
-        this.couponService = couponService;
-        this.pointService = pointService;
-    }
-    Instant now = Instant.now();
+     public CompanyServiceImpl(
+             CompanyRepository companyRepository,
+             PasswordEncoder passwordEncoder,
+             @Lazy ReferralCodeService referralCodeService,
+             @Lazy CouponService couponService,
+             @Lazy PointService pointService,
+             @Lazy CurrentUser currentUser
+     ) {
+          this.companyRepository = companyRepository;
+          this.passwordEncoder = passwordEncoder;
+          this.referralCodeService = referralCodeService;
+          this.couponService = couponService;
+          this.pointService = pointService;
+          this.currentUser = currentUser;
+     }
 
-    @Cacheable(value = "getCompanyByEmail", key = "#email")
-    @Override
-    public Company getCompanyByEmail(String email) {
-        Optional<Company> company = companyRepository.findByEmail(email);
-        if (company.isEmpty()) {
-            throw new DataNotFoundException("Company not found");
-        }
-        return company.orElse(null);
-    }
+     Instant now = Instant.now();
+
+     @Cacheable(value = "getCompanyByEmail", key = "#email")
+     @Override
+     public Company getCompanyByEmail(String email) {
+          Optional<Company> company = companyRepository.findByEmail(email);
+          if (company.isEmpty()) {
+               throw new DataNotFoundException("Company not found");
+          }
+          return company.orElse(null);
+     }
 
 
-    @Cacheable(value = "getCompanyBySlug", key = "#slug")
-    @Override
-    public Company getCompanyBySlug(String slug) {
-        Optional<Company> company = companyRepository.findBySlug(slug);
-        if (company.isEmpty()) {
-            throw new DataNotFoundException("Company not found");
-        }
-        return company.orElse(null);
-    }
+     @Cacheable(value = "getCompanyBySlug", key = "#slug")
+     @Override
+     public Company getCompanyBySlug(String slug) {
+          Optional<Company> company = companyRepository.findBySlug(slug);
+          if (company.isEmpty()) {
+               throw new DataNotFoundException("Company not found");
+          }
+          return company.orElse(null);
+     }
 
-    @Override
-    public CompanyDto getCompanyDtoBySlug(String slug){
-        Company company = getCompanyBySlug(slug);
-        CompanyDto companyDto =  company.toCompanyDto();
-        return companyDto;
-    }
+     @Override
+     public CompanyDto getCompanyDtoBySlug(String slug) {
+          Company company = getCompanyBySlug(slug);
+          CompanyDto companyDto = company.toCompanyDto();
+          return companyDto;
+     }
 
-    public List<CompanyDto> getAllCompany(){
-        List<Company> companies = companyRepository.findAll();
-        return companies.stream().map(Company::toCompanyDto).toList();
-    }
+     public List<CompanyDto> getAllCompany() {
+          List<Company> companies = companyRepository.findAll();
+          return companies.stream().map(Company::toCompanyDto).toList();
+     }
 
-    @Cacheable(value = "getCompanyById", key = "#id")
-    @Override
-    public Company getCompanyById(Long id) {
-        Optional<Company> company = companyRepository.findById(id);
-        if (company.isEmpty()) {
-            throw new DataNotFoundException("Company not found");
-        }
-        return company.orElse(null);
-    }
+     @Cacheable(value = "getCompanyById", key = "#id")
+     @Override
+     public Company getCompanyById(Long id) {
+          Optional<Company> company = companyRepository.findById(id);
+          if (company.isEmpty()) {
+               throw new DataNotFoundException("Company not found");
+          }
+          return company.orElse(null);
+     }
 
-    @Override
-    @Transactional
-    @RateLimiter(name = "default")
-    public RegisterCompanyResponseDto register(RegisterCompanyRequestDto registerDto) {
-        Company company = registerDto.toEntity();
-        String slug = SlugifyHelper.slugify(registerDto.getName());
-        var password = passwordEncoder.encode(company.getPassword());
-        company.setPassword(password);
-        company.setProfileUrl(" ");
-        company.setSlug(slug);
+     @Override
+     @Transactional
+     @RateLimiter(name = "default")
+     public RegisterCompanyResponseDto register(RegisterCompanyRequestDto registerDto) {
+          Boolean isNameExist = companyRepository.existsByName(registerDto.getName());
+          if (isNameExist) {
+               throw new AlreadyExistException("Company name already exist");
+          }
 
-        var companyRegistered = companyRepository.save(company);
+          Boolean isEmailExist = companyRepository.existsByEmail(registerDto.getEmail());
+          if (isEmailExist) {
+               throw new AlreadyExistException("Company email already exist");
+          }
 
-        ReferralCodeDto referralCodeDto = new ReferralCodeDto();
-        referralCodeDto.setCompanyId(companyRegistered.getId());
-        referralCodeDto.setCode(slug);
-        referralCodeService.addReferralCode(referralCodeDto);
+          Company company = registerDto.toEntity();
+          String slug = SlugifyHelper.slugify(registerDto.getName());
+          var password = passwordEncoder.encode(company.getPassword());
+          company.setPassword(password);
+          company.setSlug(slug);
 
-        if(!registerDto.getReferralCode().isBlank()){
-            ReferralCode referralCode = referralCodeService.getReferralCodeByCode(registerDto.getReferralCode());
-            couponService.addCoupon(companyRegistered.getId(), referralCode.getId() );
-            pointService.addPoint(referralCode.getCompany().getId());
-        }
+          var companyRegistered = companyRepository.save(company);
 
-        RegisterCompanyResponseDto registerCompanyResponseDto = new RegisterCompanyResponseDto();
-        registerCompanyResponseDto.setId(companyRegistered.getId());
-        registerCompanyResponseDto.setAddress(companyRegistered.getAddress());
-        registerCompanyResponseDto.setName(companyRegistered.getName());
-        registerCompanyResponseDto.setCity(companyRegistered.getCity());
-        registerCompanyResponseDto.setEmail(companyRegistered.getEmail());
-        registerCompanyResponseDto.setWebsiteUrl(companyRegistered.getWebsiteUrl());
-        registerCompanyResponseDto.setPhoneNumber(companyRegistered.getPhoneNumber());
+          ReferralCodeDto referralCodeDto = new ReferralCodeDto();
+          referralCodeDto.setCompanyId(companyRegistered.getId());
+          referralCodeDto.setCode(slug);
+          referralCodeService.addReferralCode(referralCodeDto);
+          if (!registerDto.getReferralCode().isBlank()) {
+               ReferralCode referralCode = referralCodeService.getReferralCodeByCode(registerDto.getReferralCode());
+               couponService.addCoupon(companyRegistered.getId(), referralCode.getId());
+               pointService.addPoint(referralCode.getCompany().getId());
+          }
 
-        return registerCompanyResponseDto;
-    }
+
+          RegisterCompanyResponseDto registerCompanyResponseDto = new RegisterCompanyResponseDto();
+          registerCompanyResponseDto.setId(companyRegistered.getId());
+          registerCompanyResponseDto.setAddress(companyRegistered.getAddress());
+          registerCompanyResponseDto.setName(companyRegistered.getName());
+          registerCompanyResponseDto.setCity(companyRegistered.getCity());
+          registerCompanyResponseDto.setEmail(companyRegistered.getEmail());
+          registerCompanyResponseDto.setWebsiteUrl(companyRegistered.getWebsiteUrl());
+          registerCompanyResponseDto.setPhoneNumber(companyRegistered.getPhoneNumber());
+
+          return registerCompanyResponseDto;
+     }
+
+     @Override
+     public CompanyDto getCompany() {
+          Long companyId = currentUser.getAuthorizedCompanyId();
+          Company company = getCompanyById(companyId);
+          return company.toCompanyDto();
+     }
 
 
 }
