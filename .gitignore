@@ -34,3 +34,5 @@ build/
 /src/main/resources/application-secret.properties
 
 .env
+.DS_Store.DS_Store
+**/.DS_Store
