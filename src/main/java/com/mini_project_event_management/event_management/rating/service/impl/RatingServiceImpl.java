@@ -43,9 +43,9 @@ public class RatingServiceImpl implements RatingService {
           Event event = eventService.getEventById(ratingRequestDto.getEventId());
           Users user = usersService.getUserById(userId);
           Date eventEnd = event.getDateEnd();
-          if (now.isBefore(eventEnd.toInstant())) {
-               throw new ApplicationException("Cannot give rating because event end date before now");
-          }
+//          if (now.isBefore(eventEnd.toInstant())) {
+//               throw new ApplicationException("Cannot give rating because event end date before now");
+//          }
           rating.setUsers(user);
           rating.setEvent(event);
           rating.setRating(ratingRequestDto.getRating());
