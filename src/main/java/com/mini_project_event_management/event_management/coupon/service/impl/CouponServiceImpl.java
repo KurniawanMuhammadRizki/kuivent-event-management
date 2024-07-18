@@ -19,60 +19,65 @@ import java.util.Optional;
 
 @Service
 public class CouponServiceImpl implements CouponService {
-    private final CouponRepository couponRepository;
-    private final CompanyService companyService;
-    private final ReferralCodeService referralCodeService;
+     private final CouponRepository couponRepository;
+     private final CompanyService companyService;
+     private final ReferralCodeService referralCodeService;
 
-    public  CouponServiceImpl(CouponRepository couponRepository, CompanyService companyService, ReferralCodeService referralCodeService){
-        this.couponRepository = couponRepository;
-        this.companyService = companyService;
-        this.referralCodeService = referralCodeService;
-    }
+     public CouponServiceImpl(CouponRepository couponRepository, CompanyService companyService, ReferralCodeService referralCodeService) {
+          this.couponRepository = couponRepository;
+          this.companyService = companyService;
+          this.referralCodeService = referralCodeService;
+     }
 
-    Instant now = Instant.now();
+     Instant now = Instant.now();
 
 
-    @Override
-    public void addCoupon(Long companyId, Long referralId){
-        Company company = companyService.getCompanyById(companyId);
-        ReferralCode referralCode = referralCodeService.getReferralCodeById(referralId);
-        //Instant expiredAt = now.plus(3, ChronoUnit.MONTHS);
-        LocalDateTime localDateTime = LocalDateTime.ofInstant(now, ZoneId.systemDefault());
+     @Override
+     public void addCoupon(Long companyId, Long referralId) {
+          Company company = companyService.getCompanyById(companyId);
+          ReferralCode referralCode = referralCodeService.getReferralCodeById(referralId);
+          //Instant expiredAt = now.plus(3, ChronoUnit.MONTHS);
+          LocalDateTime localDateTime = LocalDateTime.ofInstant(now, ZoneId.systemDefault());
+          LocalDateTime futureDateTime = localDateTime.plus(3, ChronoUnit.MONTHS);
+          Instant expiredAt = futureDateTime.atZone(ZoneId.systemDefault()).toInstant();
+          Coupon coupon = new Coupon();
+          coupon.setCompany(company);
+          coupon.setReferralCode(referralCode);
+          coupon.setCreatedAt(now);
+          coupon.setUpdatedAt(now);
+          coupon.setValid(true);
+          coupon.setExpiredAt(expiredAt);
+          couponRepository.save(coupon);
 
-        // Add 3 months to LocalDateTime
-        LocalDateTime futureDateTime = localDateTime.plus(3, ChronoUnit.MONTHS);
+     }
 
-        // Convert back to Instant
-        Instant expiredAt = futureDateTime.atZone(ZoneId.systemDefault()).toInstant();
-        Coupon coupon = new Coupon();
-        coupon.setCompany(company);
-        coupon.setReferralCode(referralCode);
-        coupon.setCreatedAt(now);
-        coupon.setUpdatedAt(now);
-        coupon.setValid(true);
-        coupon.setExpiredAt(expiredAt);
-        couponRepository.save(coupon);
+     @Override
+     public Coupon getCouponById(Long id) {
+          Optional<Coupon> coupon = couponRepository.findById(id);
+          if (coupon.isEmpty() || coupon == null) {
+               throw new DataNotFoundException("Coupon not found");
+          }
+          return coupon.orElse(null);
+     }
 
-    }
+     @Override
+     public Integer getCountCouponByCompanyId(Long companyId) {
+          Company company = companyService.getCompanyById(companyId);
+          if (company == null) {
+               throw new DataNotFoundException("Company Not Found");
+          }
+          return couponRepository.countByCompanyId(companyId);
+     }
 
-    @Override
-    public Coupon getCouponById(Long id){
-        Optional<Coupon> coupon = couponRepository.findById(id);
-        if(coupon.isEmpty() || coupon == null){
-            throw new DataNotFoundException("Coupon not found");
-        }
-        return coupon.orElse(null);
-    }
+     @Override
+     public void setCouponUsed(Long id) {
+          Optional<Coupon> couponOptional = couponRepository.findById(id);
+          if (couponOptional.isEmpty()) {
+               throw new DataNotFoundException("Coupon not found");
+          }
 
-    @Override
-    public void setCouponUsed(Long id) {
-        Optional<Coupon> couponOptional = couponRepository.findById(id);
-        if (couponOptional.isEmpty()) {
-            throw new DataNotFoundException("Coupon not found");
-        }
-
-        Coupon coupon = couponOptional.get();
-        coupon.setValid(false);
-        couponRepository.save(coupon);
-    }
+          Coupon coupon = couponOptional.get();
+          coupon.setValid(false);
+          couponRepository.save(coupon);
+     }
 }
