@@ -27,6 +27,7 @@ import lombok.extern.java.Log;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.security.SecureRandom;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -46,7 +47,7 @@ public class InvoiceServiceImpl implements InvoiceService {
      private final PointService pointService;
      private final EventTypeService eventTypeService;
 
-     public InvoiceServiceImpl(InvoiceRepository invoiceRepository, EventService eventService, CouponService couponService, VoucherService voucherService, CompanyService companyService, CategoryService categoryService, BlockService blockService, PointService pointService, EventTypeService eventTypeService ) {
+     public InvoiceServiceImpl(InvoiceRepository invoiceRepository, EventService eventService, CouponService couponService, VoucherService voucherService, CompanyService companyService, CategoryService categoryService, BlockService blockService, PointService pointService, EventTypeService eventTypeService) {
           this.invoiceRepository = invoiceRepository;
           this.eventService = eventService;
           this.couponService = couponService;
@@ -91,7 +92,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
           if (invoiceDto.getVoucherCode() != null) {
                Voucher voucher = voucherService.getVoucherByCode(invoiceDto.getVoucherCode());
-               if(voucher.getDeletedAt() != null){
+               if (voucher.getDeletedAt() != null) {
                     throw new DataNotFoundException("Voucher invalid / deleted");
                }
                invoice.setVoucher(voucher);
@@ -100,7 +101,7 @@ public class InvoiceServiceImpl implements InvoiceService {
                finalPrice -= (finalPrice * voucher.getDiscountPercent() / 100);
           }
 
-          if(invoiceDto.isUsePoint()){
+          if (invoiceDto.isUsePoint()) {
                int companyPoint = pointService.getPointsByCompanyId(company.getId());
                invoice.setPointAmount(companyPoint);
                finalPrice -= companyPoint;
@@ -118,11 +119,11 @@ public class InvoiceServiceImpl implements InvoiceService {
           if (invoiceDto.getCouponId() != null) {
                Coupon coupon = couponService.getCouponById(invoiceDto.getCouponId());
 
-               if(!coupon.isValid()){
+               if (!coupon.isValid()) {
                     throw new DataNotFoundException("You doesn't have valid coupon");
                }
 
-               if(coupon.getExpiredAt().isAfter(Instant.now())){
+               if (coupon.getExpiredAt().isAfter(Instant.now())) {
                     throw new DataNotFoundException("You doesn't have valid coupon");
                }
 
@@ -130,6 +131,10 @@ public class InvoiceServiceImpl implements InvoiceService {
                invoice.setCouponUsed(true);
                couponService.setCouponUsed(invoiceDto.getCouponId());
                finalPrice -= (finalPrice * 0.1);
+          }
+
+          if(finalPrice < 0){
+               finalPrice = 0;
           }
 
           invoice.setTotalPrice((float) finalPrice);
@@ -141,24 +146,30 @@ public class InvoiceServiceImpl implements InvoiceService {
           SecureRandom random = new SecureRandom();
           String letter = companyName.length() < 3 ? companyName : companyName.substring(0, 3);
           int number = 100 + random.nextInt(900);
-          return "INVOICE/"+ eventName.toUpperCase() + "/" + letter.toUpperCase() + number;
+          return "INVOICE/" + eventName.toUpperCase() + "/" + letter.toUpperCase() + number;
      }
 
      @Override
-     public List<InvoiceResponseDto> getInvoiceByEventId(Long id){
+     public List<InvoiceResponseDto> getInvoiceByEventId(Long id) {
           List<Invoice> invoices = invoiceRepository.findAllByEventId(id);
-          if(invoices == null || invoices.isEmpty()){
+          if (invoices == null || invoices.isEmpty()) {
                throw new DataNotFoundException("Invoice not found");
           }
           return invoices.stream().map(Invoice::toInvoiceResponseDto).collect(Collectors.toList());
      }
 
      @Override
-     public List<InvoiceResponseDto> getInvoiceByCompanyId(Long id){
+     public List<InvoiceResponseDto> getInvoiceByCompanyId(Long id) {
           List<Invoice> invoices = invoiceRepository.findAllByCompanyId(id);
-          if(invoices == null || invoices.isEmpty()){
+          if (invoices == null || invoices.isEmpty()) {
                throw new DataNotFoundException("Invoice not found");
           }
           return invoices.stream().map(Invoice::toInvoiceResponseDto).collect(Collectors.toList());
+     }
+
+     @Override
+     public BigDecimal getIncomeByEventId(Long id) {
+          eventService.getEventById(id);
+          return invoiceRepository.sumTotalPriceByEventId(id);
      }
 }
