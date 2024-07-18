@@ -17,24 +17,17 @@ public class InvoiceResponseDto {
      private LocalTime hourStart;
      private LocalTime hourEnd;
      private String eventType;
-
      private String email;
      private String companyName;
-
      private String categoryName;
      private Float price;
-
      private String blockName;
-
      private Boolean voucherUsed;
      private String voucherName;
      private Integer discountPercent;
-
      private Boolean couponUsed;
-
      private Boolean pointUsed;
      private Integer pointAmount;
-
      private String invoiceCode;
      private Float totalPrice;
 

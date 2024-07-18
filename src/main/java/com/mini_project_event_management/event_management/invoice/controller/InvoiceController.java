@@ -9,31 +9,39 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/invoice")
 public class InvoiceController {
      private final InvoiceService invoiceService;
-     public InvoiceController(InvoiceService invoiceService){
+
+     public InvoiceController(InvoiceService invoiceService) {
           this.invoiceService = invoiceService;
      }
 
      @PostMapping
-     public ResponseEntity<Response<Object>> generateInvoice(@Validated @RequestBody InvoiceDto invoiceDto){
+     public ResponseEntity<Response<Object>> generateInvoice(@Validated @RequestBody InvoiceDto invoiceDto) {
           invoiceService.generateInvoice(invoiceDto);
           return Response.successfulResponse("Invoice generated successfully");
      }
 
      @GetMapping("/event/{id}")
-     public ResponseEntity<Response<List<InvoiceResponseDto>>> getInvoiceByEventId(@PathVariable Long id){
+     public ResponseEntity<Response<List<InvoiceResponseDto>>> getInvoiceByEventId(@PathVariable Long id) {
           List<InvoiceResponseDto> invoices = invoiceService.getInvoiceByEventId(id);
           return Response.successfulResponse("Invoice fetched successfully", invoices);
      }
 
      @GetMapping("/company/{id}")
-     public ResponseEntity<Response<List<InvoiceResponseDto>>> getInvoiceByCompanyId(@PathVariable Long id){
+     public ResponseEntity<Response<List<InvoiceResponseDto>>> getInvoiceByCompanyId(@PathVariable Long id) {
           List<InvoiceResponseDto> invoices = invoiceService.getInvoiceByCompanyId(id);
           return Response.successfulResponse("Invoice fetched successfully", invoices);
+     }
+
+     @GetMapping("/income/event/{id}")
+     public ResponseEntity<Response<BigDecimal>> getIncomeByEventId(@PathVariable Long id) {
+          BigDecimal income = invoiceService.getIncomeByEventId(id);
+          return Response.successfulResponse("Total income by event Id fetched successfully ", income);
      }
 }
