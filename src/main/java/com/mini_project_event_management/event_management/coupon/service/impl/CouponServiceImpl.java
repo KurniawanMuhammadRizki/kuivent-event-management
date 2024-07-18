@@ -61,12 +61,12 @@ public class CouponServiceImpl implements CouponService {
      }
 
      @Override
-     public Integer getCountCouponByCompanyId(Long companyId) {
-          Company company = companyService.getCompanyById(companyId);
-          if (company == null) {
-               throw new DataNotFoundException("Company Not Found");
+     public Integer getCountCouponByReferralId(Long referralId) {
+          ReferralCode referralCode = referralCodeService.getReferralCodeById(referralId);
+          if (referralCode == null) {
+               throw new DataNotFoundException("Referral Not Found");
           }
-          return couponRepository.countByCompanyId(companyId);
+          return couponRepository.countByReferralCode_Id(referralId);
      }
 
      @Override

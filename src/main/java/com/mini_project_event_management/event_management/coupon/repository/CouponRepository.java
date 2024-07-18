@@ -8,6 +8,5 @@ import org.springframework.stereotype.Repository;
 
 
 public interface CouponRepository extends JpaRepository<Coupon,  Long> {
-     @Query("SELECT COUNT(c) FROM Coupon c WHERE c.companyId = :companyId")
-     Integer countByCompanyId(@Param("companyId") Long companyId);
+     Integer countByReferralCode_Id(Long referralId);
 }

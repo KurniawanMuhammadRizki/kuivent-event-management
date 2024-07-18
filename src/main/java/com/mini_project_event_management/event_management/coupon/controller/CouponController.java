@@ -3,13 +3,10 @@ package com.mini_project_event_management.event_management.coupon.controller;
 import com.mini_project_event_management.event_management.coupon.service.CouponService;
 import com.mini_project_event_management.event_management.responses.Response;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping
+@RequestMapping("/api/v1/coupon")
 public class CouponController {
      private final CouponService couponService;
 
@@ -17,9 +14,9 @@ public class CouponController {
           this.couponService = couponService;
      }
 
-     @PostMapping("/companyId")
-     public ResponseEntity<Response<Integer>> getCountCouponByCompanyId(@PathVariable Integer companyId) {
-          Integer result = couponService.getCountCouponByCompanyId(Long.valueOf(companyId));
-          return Response.successfulResponse("Point fetched successfully", result);
+     @GetMapping("/{referralId}")
+     public ResponseEntity<Response<Integer>> getCountCouponByReferralId(@PathVariable Integer referralId) {
+          Integer result = couponService.getCountCouponByReferralId(Long.valueOf(referralId));
+          return Response.successfulResponse("Total coupon used", result);
      }
 }
