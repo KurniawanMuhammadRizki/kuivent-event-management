@@ -34,4 +34,4 @@ build/
 /src/main/resources/application-secret.properties
 
 .env
-.DS_Storei
+.DS_Storei.DS_Store
