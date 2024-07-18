@@ -133,6 +133,7 @@ public class Event implements Serializable {
 
      public EventDto toEventDto() {
           EventDto eventDto = new EventDto();
+          eventDto.setId(this.id);
           eventDto.setName(this.name);
           eventDto.setAddress(this.address);
           eventDto.setCity(this.city);
