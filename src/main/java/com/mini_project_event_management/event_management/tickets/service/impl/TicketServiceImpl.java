@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-
 @Service
 public class TicketServiceImpl implements TicketService {
      private final TicketRepository ticketRepository;
@@ -55,8 +54,8 @@ public class TicketServiceImpl implements TicketService {
      public void addTicket(AddTicketDto ticketDto) {
           Event event = eventService.getEventById(ticketDto.getEventId());
           Users user = usersService.getUserById(ticketDto.getUserId());
-          Block block = blockService.getBlockById(ticketDto.getBlockId());
-          Category category = categoryService.getCategoryById(ticketDto.getCategoryId()).toEntity();
+//          Block block = blockService.getBlockById(ticketDto.getBlockId());
+//          Category category = categoryService.getCategoryById(ticketDto.getCategoryId()).toEntity();
           String ticketCode = generateTicketCode(user.getFirstName());
           Ticket ticket = new Ticket();
           ticket.setEvent(event);
@@ -66,15 +65,15 @@ public class TicketServiceImpl implements TicketService {
           ticket.setHourStart(event.getHourStart().toInstant().atZone(ZoneId.systemDefault()).toLocalTime());
           ticket.setHourEnd(event.getHourEnd().toInstant().atZone(ZoneId.systemDefault()).toLocalTime());
           ticket.setCity(event.getCity());
-          ticket.setEventType(event.getEventType().getName());
+//          ticket.setEventType(event.getEventType().getName());
           ticket.setUsers(user);
           ticket.setFirstName(user.getFirstName());
           ticket.setLastName(user.getLastName());
           ticket.setEmail(user.getEmail());
-          ticket.setCategory(category);
-          ticket.setCategoryName(category.getName());
-          ticket.setBlock(block);
-          ticket.setBlockName(block.getName());
+//          ticket.setCategory(category);
+//          ticket.setCategoryName(category.getName());
+//          ticket.setBlock(block);
+//          ticket.setBlockName(block.getName());
           ticket.setTicketCode(ticketCode);
           ticketRepository.save(ticket);
      }
@@ -105,11 +104,16 @@ public class TicketServiceImpl implements TicketService {
      }
 
      @Override
-     public Integer CountByEventId(Long id){
+     public Integer CountByEventId(Long id) {
           Event event = eventService.getEventById(id);
           Integer result = ticketRepository.countByEventId(event.getId());
           return result;
 
+     }
+
+     @Override
+     public Boolean checkTicketByUserIdAndEventId(Long userId, Long eventId){
+          return ticketRepository.existsByUsersIdAndEventId(userId, eventId);
      }
 
 

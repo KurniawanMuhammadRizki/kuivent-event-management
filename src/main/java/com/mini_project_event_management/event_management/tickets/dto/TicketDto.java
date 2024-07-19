@@ -33,13 +33,14 @@ public class TicketDto {
      @NotBlank(message = "Email cannot be empty")
      private String email;
 
-     @NotBlank(message = "Category name cannot be empty")
-     private String categoryName;
-     @NotBlank(message = "Block name cannot be empty")
-     private String blockName;
+     //     @NotBlank(message = "Category name cannot be empty")
+//     private String categoryName;
+//     @NotBlank(message = "Block name cannot be empty")
+//     private String blockName;
      private String ticketCode;
 
      private static final SecureRandom random = new SecureRandom();
+
      public Ticket toTicket() {
           Ticket ticket = new Ticket();
           ticket.setFirstName(firstName);
@@ -57,6 +58,7 @@ public class TicketDto {
 
           return ticket;
      }
+
      private String generateTicketCode(String firstName) {
           String letter = firstName.length() < 3 ? firstName : firstName.substring(0, 3);
           int number = 100 + random.nextInt(900);

@@ -7,6 +7,10 @@ import java.util.List;
 
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
      List<Ticket> findAllByEventId(Long id);
+
      List<Ticket> findAllByUsersId(Long id);
+
      Integer countByEventId(Long eventId);
+     Boolean existsByUsersIdAndEventId(Long userId, Long eventId);
+
 }

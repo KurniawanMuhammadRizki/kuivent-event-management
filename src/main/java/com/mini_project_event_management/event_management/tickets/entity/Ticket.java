@@ -112,7 +112,7 @@ public class Ticket implements Serializable {
           this.deletedAt = Instant.now();
      }
 
-     public static TicketDto toTicketDto(Ticket ticket){
+     public static TicketDto toTicketDto(Ticket ticket) {
           TicketDto dto = new TicketDto();
           dto.setEventId(ticket.event.getId());
           dto.setUserId(ticket.users.getId());
@@ -127,8 +127,8 @@ public class Ticket implements Serializable {
           dto.setCity(ticket.city);
           dto.setEventType(ticket.eventType);
           dto.setTicketCode(ticket.ticketCode);
-          dto.setBlockName(ticket.blockName);
-          dto.setCategoryName(ticket.categoryName);
+//          dto.setBlockName(ticket.blockName);
+//          dto.setCategoryName(ticket.categoryName);
 
           return dto;
      }

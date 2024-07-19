@@ -11,10 +11,10 @@ public class AddTicketDto {
      @NotNull(message = "User  cannot be null")
      private Long userId;
 
-     @NotNull(message = "Category  cannot be null")
-     private Long categoryId;
-
-     @NotNull(message = "Block  cannot be null")
-     private Long blockId;
+//     @NotNull(message = "Category  cannot be null")
+//     private Long categoryId;
+//
+//     @NotNull(message = "Block  cannot be null")
+//     private Long blockId;
 
 }
