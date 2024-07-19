@@ -15,6 +15,7 @@ import com.mini_project_event_management.event_management.eventType.entity.Event
 import com.mini_project_event_management.event_management.eventType.service.EventTypeService;
 import com.mini_project_event_management.event_management.exceptions.ApplicationException;
 import com.mini_project_event_management.event_management.exceptions.DataNotFoundException;
+import com.mini_project_event_management.event_management.helpers.CurrentUser;
 import com.mini_project_event_management.event_management.invoice.dto.InvoiceDto;
 import com.mini_project_event_management.event_management.invoice.dto.InvoiceResponseDto;
 import com.mini_project_event_management.event_management.invoice.entity.Invoice;
@@ -46,8 +47,9 @@ public class InvoiceServiceImpl implements InvoiceService {
      private final BlockService blockService;
      private final PointService pointService;
      private final EventTypeService eventTypeService;
+     private final CurrentUser currentUser;
 
-     public InvoiceServiceImpl(InvoiceRepository invoiceRepository, EventService eventService, CouponService couponService, VoucherService voucherService, CompanyService companyService, CategoryService categoryService, BlockService blockService, PointService pointService, EventTypeService eventTypeService) {
+     public InvoiceServiceImpl(InvoiceRepository invoiceRepository, EventService eventService, CouponService couponService, VoucherService voucherService, CompanyService companyService, CategoryService categoryService, BlockService blockService, PointService pointService, EventTypeService eventTypeService, CurrentUser currentUser) {
           this.invoiceRepository = invoiceRepository;
           this.eventService = eventService;
           this.couponService = couponService;
@@ -57,14 +59,15 @@ public class InvoiceServiceImpl implements InvoiceService {
           this.blockService = blockService;
           this.pointService = pointService;
           this.eventTypeService = eventTypeService;
+          this.currentUser = currentUser;
      }
 
      @Override
      @Transactional
      public void generateInvoice(InvoiceDto invoiceDto) {
-
+          Long companyId = currentUser.getAuthorizedCompanyId();
           Event event = eventService.getEventById(invoiceDto.getEventId());
-          Company company = companyService.getCompanyById(invoiceDto.getCompanyId());
+          Company company = companyService.getCompanyById(companyId);
           CategoryDto categoryDto = categoryService.getCategoryById(invoiceDto.getCategoryId());
           Block block = blockService.getBlockById(invoiceDto.getBlockId());
           EventType eventType = eventTypeService.getEventTypeById(Math.toIntExact(event.getEventType().getId()));
