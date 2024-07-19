@@ -10,6 +10,7 @@ import com.mini_project_event_management.event_management.rating.dto.RatingReque
 import com.mini_project_event_management.event_management.rating.entity.Rating;
 import com.mini_project_event_management.event_management.rating.repository.RatingRepository;
 import com.mini_project_event_management.event_management.rating.service.RatingService;
+import com.mini_project_event_management.event_management.tickets.service.TicketService;
 import com.mini_project_event_management.event_management.users.entity.Users;
 import com.mini_project_event_management.event_management.users.service.UsersService;
 import org.springframework.stereotype.Service;
@@ -27,13 +28,15 @@ public class RatingServiceImpl implements RatingService {
      private final EventService eventService;
      private final UsersService usersService;
      private final CurrentUser currentUser;
+     private final TicketService ticketService;
 
 
-     public RatingServiceImpl(RatingRepository ratingRepository, EventService eventService, UsersService usersService, CurrentUser currentUser) {
+     public RatingServiceImpl(RatingRepository ratingRepository, EventService eventService, UsersService usersService, CurrentUser currentUser, TicketService ticketService) {
           this.ratingRepository = ratingRepository;
           this.eventService = eventService;
           this.usersService = usersService;
           this.currentUser = currentUser;
+          this.ticketService = ticketService;
      }
 
      Rating toRating(RatingRequestDto ratingRequestDto) {
@@ -46,6 +49,10 @@ public class RatingServiceImpl implements RatingService {
 //          if (now.isBefore(eventEnd.toInstant())) {
 //               throw new ApplicationException("Cannot give rating because event end date before now");
 //          }
+          Boolean checkTicket = ticketService.checkTicketByUserIdAndEventId(user.getId(), event.getId());
+          if(checkTicket == false){
+               throw new DataNotFoundException("Ticket not found, you dont have ticket");
+          }
           rating.setUsers(user);
           rating.setEvent(event);
           rating.setRating(ratingRequestDto.getRating());
