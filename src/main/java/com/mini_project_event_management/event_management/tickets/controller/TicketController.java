@@ -36,4 +36,10 @@ public class TicketController {
           List<TicketDto> ticketDtos = ticketService.getTicketByUsersId(id);
           return Response.successfulResponse("Ticket fetched successfully", ticketDtos);
      }
+
+     @GetMapping("/attendee/event/{id}")
+     public ResponseEntity<Response<Integer>> getTotalAttendeeByEvent(@PathVariable Long id){
+          Integer result = ticketService.CountByEventId(id);
+          return Response.successfulResponse("Total Attendee  by event id:" , result);
+     }
 }

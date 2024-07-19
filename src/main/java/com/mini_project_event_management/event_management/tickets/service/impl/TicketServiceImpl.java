@@ -104,5 +104,13 @@ public class TicketServiceImpl implements TicketService {
           return letter.toUpperCase() + number;
      }
 
+     @Override
+     public Integer CountByEventId(Long id){
+          Event event = eventService.getEventById(id);
+          Integer result = ticketRepository.countByEventId(event.getId());
+          return result;
+
+     }
+
 
 }
