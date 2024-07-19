@@ -8,8 +8,8 @@ public class AddTicketDto {
      @NotNull(message = "Event  cannot be null")
      private Long eventId;
 
-     @NotNull(message = "User  cannot be null")
-     private Long userId;
+//     @NotNull(message = "User  cannot be null")
+//     private Long userId;
 
 //     @NotNull(message = "Category  cannot be null")
 //     private Long categoryId;

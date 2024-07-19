@@ -7,6 +7,7 @@ import com.mini_project_event_management.event_management.category.service.Categ
 import com.mini_project_event_management.event_management.event.entity.Event;
 import com.mini_project_event_management.event_management.event.service.EventService;
 import com.mini_project_event_management.event_management.exceptions.DataNotFoundException;
+import com.mini_project_event_management.event_management.helpers.CurrentUser;
 import com.mini_project_event_management.event_management.tickets.dto.AddTicketDto;
 import com.mini_project_event_management.event_management.tickets.dto.TicketDto;
 import com.mini_project_event_management.event_management.tickets.entity.Ticket;
@@ -30,13 +31,15 @@ public class TicketServiceImpl implements TicketService {
      private final UsersService usersService;
      private final CategoryService categoryService;
      private final BlockService blockService;
+     private final CurrentUser currentUser;
 
-     public TicketServiceImpl(TicketRepository ticketRepository, EventService eventService, UsersService usersService, CategoryService categoryService, BlockService blockService) {
+     public TicketServiceImpl(TicketRepository ticketRepository, EventService eventService, UsersService usersService, CategoryService categoryService, BlockService blockService, CurrentUser currentUser) {
           this.ticketRepository = ticketRepository;
           this.eventService = eventService;
           this.usersService = usersService;
           this.blockService = blockService;
           this.categoryService = categoryService;
+          this.currentUser = currentUser;
      }
 
 //     @Override
@@ -52,8 +55,9 @@ public class TicketServiceImpl implements TicketService {
      @Override
      @Transactional
      public void addTicket(AddTicketDto ticketDto) {
+          Long userId = currentUser.getAuthorizedUsersId();
           Event event = eventService.getEventById(ticketDto.getEventId());
-          Users user = usersService.getUserById(ticketDto.getUserId());
+          Users user = usersService.getUserById(userId);
 //          Block block = blockService.getBlockById(ticketDto.getBlockId());
 //          Category category = categoryService.getCategoryById(ticketDto.getCategoryId()).toEntity();
           String ticketCode = generateTicketCode(user.getFirstName());
