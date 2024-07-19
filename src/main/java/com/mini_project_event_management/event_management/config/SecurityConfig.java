@@ -79,6 +79,7 @@ public class SecurityConfig {
                        auth.requestMatchers("api/v1/voucher/organizer").hasAuthority("SCOPE_ROLE_ORGANIZER");
                        auth.requestMatchers("api/v1/speakers").hasAuthority("SCOPE_ROLE_ORGANIZER");
                        auth.requestMatchers("api/v1/invoice/income").hasAuthority("SCOPE_ROLE_ORGANIZER");
+                       auth.requestMatchers(HttpMethod.POST,"api/v1/invoice").hasAuthority("SCOPE_ROLE_COMPANY");
                        auth.anyRequest().authenticated();
                   }).sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                   .oauth2ResourceServer((oauth2) -> oauth2.jwt((jwt) -> jwt.decoder(jwtDecoder()))).userDetailsService(userDetailsService).httpBasic(Customizer.withDefaults()).build();
