@@ -8,4 +8,6 @@ public interface ProductsService {
     Products getProductsByName(String name);
     Boolean checkProductsByName(String name);
 
+    ProductsDto getProductBySlug(String slug);
+
 }

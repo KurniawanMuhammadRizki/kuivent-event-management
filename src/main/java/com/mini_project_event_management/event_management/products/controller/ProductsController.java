@@ -5,10 +5,7 @@ import com.mini_project_event_management.event_management.products.service.Produ
 import com.mini_project_event_management.event_management.responses.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/products")
@@ -23,6 +20,12 @@ public class ProductsController {
     public ResponseEntity<Response<Object>> addProducts(@Validated @RequestBody ProductsDto productsDto){
         productsService.addProducts(productsDto);
         return  Response.successfulResponse("ok");
+    }
+
+    @GetMapping("/{slug}")
+    public ResponseEntity<Response<ProductsDto>> getProductBySlug(@PathVariable String slug){
+        ProductsDto productsDto =  productsService.getProductBySlug(slug);
+        return Response.successfulResponse("Products fetched successfully", productsDto);
     }
 
 

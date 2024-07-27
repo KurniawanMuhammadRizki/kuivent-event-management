@@ -65,6 +65,16 @@ public class ProductsServiceImpl implements ProductsService {
     }
 
     @Override
+    public ProductsDto getProductBySlug(String slug){
+        Optional<Products> products = Optional.ofNullable(productsRepository.findBySlug(slug));
+
+        if(products.isEmpty()){
+            throw new DataNotFoundException("Product not found");
+        }
+        return products.get().toProductsDto();
+    }
+
+    @Override
     public Boolean checkProductsByName(String name){
         Optional<Products> products = Optional.ofNullable(productsRepository.findByName(name));
         return products.isPresent();
