@@ -68,6 +68,7 @@ public class SecurityConfig {
                        auth.requestMatchers("api/v1/company/register").permitAll();
                        auth.requestMatchers(HttpMethod.GET, "api/v1/company/{slug}").permitAll();
                        auth.requestMatchers(HttpMethod.GET, "api/v1/rating/{eventId}").permitAll();
+                       auth.requestMatchers(HttpMethod.GET, "api/v1/products/{slug}").permitAll();
                        auth.requestMatchers("api/v1/users/register").permitAll();
                        auth.requestMatchers("api/v1/organizer/register").permitAll();
                        auth.requestMatchers("api/v1/event/**").permitAll();
