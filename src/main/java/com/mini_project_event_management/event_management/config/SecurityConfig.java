@@ -76,10 +76,11 @@ public class SecurityConfig {
                        auth.requestMatchers("api/v1/block/**").permitAll();
                        auth.requestMatchers("api/v1/event-topic/**").permitAll();
                        auth.requestMatchers("api/v1/rating/").permitAll();
+                       auth.requestMatchers("api/v1/speakers/{slug}").permitAll();
                        auth.requestMatchers("api/v1/user/forget-password").permitAll();
                        auth.requestMatchers(HttpMethod.POST, "api/v1/voucher").hasAuthority("SCOPE_ROLE_ORGANIZER");
                        auth.requestMatchers("api/v1/voucher/organizer").hasAuthority("SCOPE_ROLE_ORGANIZER");
-                       auth.requestMatchers("api/v1/speakers").hasAuthority("SCOPE_ROLE_ORGANIZER");
+                       auth.requestMatchers(HttpMethod.POST,"api/v1/speakers").hasAuthority("SCOPE_ROLE_ORGANIZER");
                        auth.requestMatchers("api/v1/invoice/income").hasAuthority("SCOPE_ROLE_ORGANIZER");
                        auth.requestMatchers(HttpMethod.POST,"api/v1/invoice").hasAuthority("SCOPE_ROLE_COMPANY");
                        auth.anyRequest().authenticated();

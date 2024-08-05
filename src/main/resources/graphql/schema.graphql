@@ -1,0 +1,9 @@
+type Speakers{
+    id: ID!
+    name: String!
+    profileImageUrl: String!
+    slug: String!
+    about: String!
+    position: String!
+    companyName: String!
+}
